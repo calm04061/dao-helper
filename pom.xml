@@ -14,20 +14,14 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <modules>
-        <module>dao-helper-annotaion</module>
+        <module>dao-helper-annotation</module>
         <module>dao-helper-it</module>
     </modules>
-    <dependencies>
-        <dependency>
-            <groupId>com.github.github</groupId>
-            <artifactId>site-maven-plugin</artifactId>
-            <version>0.12</version>
-        </dependency>
-    </dependencies>
     <repositories>
         <repository>
             <id>github</id>
             <url>https://raw.githubusercontent.com/calm04061/maven/master/</url>
+            <name>github</name>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>

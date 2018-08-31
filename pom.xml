@@ -18,5 +18,17 @@
         <module>dao-helper-it</module>
     </modules>
 
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.amashchenko.maven.plugin</groupId>
+                <artifactId>gitflow-maven-plugin</artifactId>
+                <version>1.9.0</version>
+                <configuration>
+                    <pushRemote>true</pushRemote>
+                    <skipTestProject>true</skipTestProject>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

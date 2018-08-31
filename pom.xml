@@ -17,6 +17,13 @@
         <module>dao-helper-annotaion</module>
         <module>dao-helper-it</module>
     </modules>
+    <dependencies>
+        <dependency>
+            <groupId>com.github.github</groupId>
+            <artifactId>site-maven-plugin</artifactId>
+            <version>0.12</version>
+        </dependency>
+    </dependencies>
     <repositories>
         <repository>
             <id>github</id>
@@ -48,7 +55,8 @@
                     </includes>
                     <repositoryName>maven</repositoryName>      <!-- github repo name -->
                     <repositoryOwner>calm04061</repositoryOwner>    <!-- github username  -->
-                    <userName>calm04061</userName>
+                    <userName>calm0406@163.com</userName>
+                    <oauth2Token>${github-token}</oauth2Token>
                     <merge>true</merge>
                 </configuration>
                 <executions>

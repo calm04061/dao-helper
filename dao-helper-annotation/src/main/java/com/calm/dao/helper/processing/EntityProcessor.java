@@ -1,14 +1,18 @@
 package com.calm.dao.helper.processing;
 
+import com.calm.dao.helper.AbstractDao;
+import com.calm.dao.helper.annotation.Helper;
+import com.calm.dao.helper.field.FieldProcessor;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.*;
 
 import javax.annotation.processing.*;
 import javax.lang.model.element.*;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.util.Elements;
-import javax.persistence.Entity;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @AutoService({Processor.class})
@@ -27,14 +31,15 @@ public class EntityProcessor extends AbstractProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> annotations = new LinkedHashSet<>();
-        annotations.add(Entity.class.getCanonicalName());
+        annotations.add(Helper.class.getCanonicalName());
         return annotations;
     }
 
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         try {
-            Set<? extends Element> elementsAnnotatedWith = roundEnv.getElementsAnnotatedWith(Entity.class);
+            Set<? extends Element> elementsAnnotatedWith = roundEnv.getElementsAnnotatedWith(Helper.class);
             for(Element element:elementsAnnotatedWith){
+                String elementPackage = mElementUtils.getPackageOf(element).getQualifiedName().toString();
                 TypeElement typeElement= (TypeElement) element;
                 List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
                 List<Element> fields=enclosedElements
@@ -42,7 +47,30 @@ public class EntityProcessor extends AbstractProcessor {
                         .filter(e-> e.getKind()== ElementKind.FIELD)
                         .collect(Collectors.toList());
                 TypeSpec.Builder test = TypeSpec.classBuilder(typeElement.getSimpleName().toString()+"Dao");
-                ClassName dao = ClassName.bestGuess(typeElement.getSimpleName().toString()+"Dao");
+                List<? extends AnnotationMirror> annotation = typeElement.getAnnotationMirrors();
+                AtomicReference<String> packageName = new AtomicReference<>();;
+                packageName.set(elementPackage);
+                AtomicReference<ClassName> parent = new AtomicReference<>();;
+                parent.set(ClassName.bestGuess(AbstractDao.class.getName()));
+                for(AnnotationMirror annotationMirror:annotation){
+                    DeclaredType annotationType = annotationMirror.getAnnotationType();
+                    String s = annotationType.toString();
+                    if(s.equals(Helper.class.getName())){
+                        Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror.getElementValues();
+
+                        elementValues.forEach((key,value)->{
+                            String attr=key.getSimpleName().toString();
+                            if(attr.equals("parent")){
+                                parent.set(ClassName.bestGuess(value.getValue().toString()));
+                            }else if(attr.equals("packageName")){
+                                packageName.set(value.getValue().toString());
+                            }
+                        });
+
+                    }
+                }
+                test.superclass(parent.get());
+                ClassName dao = ClassName.get(packageName.get(), typeElement.getSimpleName().toString()+"Dao");
 
                 ServiceLoader<FieldProcessor> load = ServiceLoader.load(FieldProcessor.class,FieldProcessor.class.getClassLoader());
                 Iterator<FieldProcessor> iterator = load.iterator();
@@ -50,7 +78,7 @@ public class EntityProcessor extends AbstractProcessor {
                     VariableElement var= (VariableElement) field;
                     while(iterator.hasNext()){
                         FieldProcessor next = iterator.next();
-                        if(next.isSupport()){
+                        if(next.isSupport(var.asType())){
                             MethodSpec.Builder builder = next.buildMethod(var);
                             builder.addModifiers(Modifier.PUBLIC);
                             builder.returns(dao);
@@ -60,7 +88,7 @@ public class EntityProcessor extends AbstractProcessor {
 
                 }
 
-                JavaFile.Builder builder = JavaFile.builder(mElementUtils.getPackageOf(element).getQualifiedName().toString(), test.build());
+                JavaFile.Builder builder = JavaFile.builder(packageName.get(), test.build());
                 builder.build().writeTo(mFiler);
             }
 

@@ -1,8 +1,10 @@
 package com.calm.dao.it.entity;
 
-import javax.persistence.Entity;
+import com.calm.dao.helper.annotation.Helper;
+import com.calm.dao.it.AbstractHelperDao;
+
 import java.io.Serializable;
-@Entity
+@Helper(parent = AbstractHelperDao.class,packageName = "com.calm.dao.it.dao")
 public class User implements Serializable {
     private String id;
 

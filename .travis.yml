@@ -1,6 +1,9 @@
 # 测试
 sudo: required
 language: java
+cache:
+  directories:
+  - $HOME/.m2/repository/
 # 仓库的分支
 branches:
   only:

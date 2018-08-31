@@ -48,7 +48,7 @@
                     </includes>
                     <repositoryName>maven</repositoryName>      <!-- github repo name -->
                     <repositoryOwner>calm04061</repositoryOwner>    <!-- github username  -->
-                    <server>github</server>
+                    <userName>calm04061</userName>
                     <merge>true</merge>
                 </configuration>
                 <executions>

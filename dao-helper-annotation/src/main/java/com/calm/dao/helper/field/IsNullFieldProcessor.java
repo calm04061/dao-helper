@@ -19,6 +19,6 @@ public class IsNullFieldProcessor extends AbstractFieldProcessor {
     }
 
     public void buildMethodBody(MethodSpec.Builder builder, VariableElement var, String name) {
-        builder.addStatement("add(\"" + var + "\"," + var + ")");
+        builder.addStatement("andIsNull(\"" + var + "\")");
     }
 }

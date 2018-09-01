@@ -1,6 +1,5 @@
 package com.calm.dao.helper.field;
 
-import com.calm.dao.helper.field.FieldProcessor;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
@@ -26,7 +25,7 @@ public abstract class AbstractFieldProcessor implements FieldProcessor {
     protected abstract void buildMethodBody(MethodSpec.Builder builder, VariableElement var, String name);
 
     public String upperFrist(String name) {
-        StringBuffer temp = new StringBuffer(name.substring(0, 1).toUpperCase());
+        StringBuilder temp = new StringBuilder(name.substring(0, 1).toUpperCase());
         if (name.length() > 1) {
             temp.append(name.substring(1));
         }

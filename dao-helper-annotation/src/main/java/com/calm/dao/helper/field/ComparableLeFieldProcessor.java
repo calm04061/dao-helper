@@ -15,6 +15,6 @@ public class ComparableLeFieldProcessor extends ComparableFieldProcessor {
 
     public void buildMethodBody(MethodSpec.Builder builder, VariableElement var, String name) {
         nullReturn(builder, name);
-        builder.addStatement("add(\"" + var + "\"," + var + ")");
+        builder.addStatement("andLe(\"" + var + "\"," + var + ")");
     }
 }

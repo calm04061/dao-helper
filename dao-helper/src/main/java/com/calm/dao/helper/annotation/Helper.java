@@ -1,9 +1,9 @@
 package com.calm.dao.helper.annotation;
 
-import com.calm.dao.helper.AbstractDao;
+import com.calm.dao.helper.Subquery;
 
 public @interface Helper {
     String packageName() default "—_-_-_-";
 
-    Class<? extends AbstractDao> parent() default AbstractDao.class;
+    Class<? extends Subquery> queryParent();
 }

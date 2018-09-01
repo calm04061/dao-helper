@@ -25,7 +25,6 @@ public class ComparableBetweenFieldProcessor extends ComparableFieldProcessor {
         ParameterSpec.Builder end = ParameterSpec.builder(typeName, "end");
         builder.addParameter(start.build());
         builder.addParameter(end.build());
-//        buildMethodBody(builder,var,name);
         builder.addStatement("return this");
         return builder;
     }

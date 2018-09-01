@@ -4,7 +4,6 @@ language: java
 cache:
   directories:
   - $HOME/.m2/repository/
-  - $HOME/.m2/project/
 # 仓库的分支
 branches:
   only:

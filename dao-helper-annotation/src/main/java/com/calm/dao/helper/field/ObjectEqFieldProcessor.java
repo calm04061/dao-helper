@@ -19,7 +19,7 @@ public class ObjectEqFieldProcessor extends AbstractFieldProcessor {
     }
 
     public void buildMethodBody(MethodSpec.Builder builder, VariableElement var, String name) {
-        nullReturn(builder, name);
+        nullReturn(builder, var, name);
         builder.addStatement("andEq(\"" + var + "\"," + var + ")");
     }
 }

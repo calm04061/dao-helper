@@ -7,6 +7,7 @@ import com.calm.dao.it.AbstractHelperQuery;
 @Helper(queryParent = AbstractHelperQuery.class, packageName = "com.calm.dao.it.query")
 public class User implements BaseEntity<String> {
     private String id;
+    private int age;
 
     public String getId() {
         return id;
@@ -29,5 +30,13 @@ public class User implements BaseEntity<String> {
     @Override
     public String getObjectName() {
         return null;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 }

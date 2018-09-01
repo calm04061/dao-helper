@@ -8,7 +8,6 @@ import com.calm.dao.helper.condition.filter.FilterCondition;
 import com.calm.dao.helper.condition.filter.FilterType;
 import com.calm.dao.helper.condition.filter.InCondition;
 import com.calm.dao.helper.condition.filter.MatchType;
-import com.calm.dao.helper.entity.LogisticDeletable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
         if (value == null) {
             return this;
         }
-        if(isEmptyString(value)){
+        if (isEmptyString(value)) {
             return this;
         }
         conditions.add(Conditions.eq(AND, property, value));
@@ -48,7 +47,7 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
         if (value == null) {
             return this;
         }
-        if(isEmptyString(value)){
+        if (isEmptyString(value)) {
             return this;
         }
         conditions.add(Conditions.eq(OR, property, value));
@@ -113,7 +112,7 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
         if (value == null) {
             return this;
         }
-        if(isEmptyString(value)){
+        if (isEmptyString(value)) {
             return this;
         }
         conditions.add(Conditions.ge(AND, property, value));
@@ -128,7 +127,7 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
         if (value == null) {
             return this;
         }
-        if(isEmptyString(value)){
+        if (isEmptyString(value)) {
             return this;
         }
         conditions.add(Conditions.gt(AND, property, value));
@@ -143,7 +142,7 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
         if (value == null) {
             return this;
         }
-        if(isEmptyString(value)){
+        if (isEmptyString(value)) {
             return this;
         }
         conditions.add(Conditions.lt(AND, property, value));
@@ -158,7 +157,7 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
         if (value == null) {
             return this;
         }
-        if(isEmptyString(value)){
+        if (isEmptyString(value)) {
             return this;
         }
         conditions.add(Conditions.le(AND, property, value));
@@ -173,7 +172,7 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
         if (value == null) {
             return this;
         }
-        if(isEmptyString(value)){
+        if (isEmptyString(value)) {
             return this;
         }
         conditions.add(Conditions.ge(OR, property, value));
@@ -188,7 +187,7 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
         if (value == null) {
             return this;
         }
-        if(isEmptyString(value)){
+        if (isEmptyString(value)) {
             return this;
         }
         conditions.add(Conditions.gt(OR, property, value));
@@ -203,7 +202,7 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
         if (value == null) {
             return this;
         }
-        if(isEmptyString(value)){
+        if (isEmptyString(value)) {
             return this;
         }
         conditions.add(Conditions.lt(OR, property, value));
@@ -218,7 +217,7 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
         if (value == null) {
             return this;
         }
-        if(isEmptyString(value)){
+        if (isEmptyString(value)) {
             return this;
         }
         conditions.add(Conditions.le(OR, property, value));
@@ -341,7 +340,7 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
         if (value == null) {
             return this;
         }
-        if(isEmptyString(value)){
+        if (isEmptyString(value)) {
             return this;
         }
         conditions.add(Conditions.ne(FilterType.AND, property, value));
@@ -350,7 +349,7 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
 
     @Override
     public Query<I, E> andNormal() {
-        conditions.add(Conditions.ne(FilterType.AND, LogisticDeletable.PROPERTY_NAME, true));
+        conditions.add(Conditions.ne(FilterType.AND, Constants.LOGISTIC_DELETABLE_PROPERTY_NAME, true));
         return this;
     }
 
@@ -387,7 +386,7 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
         return conditions;
     }
 
-    private boolean isEmptyString(Object value){
+    private boolean isEmptyString(Object value) {
         return value instanceof String && ((String) value).trim().length() == 0;
     }
 }

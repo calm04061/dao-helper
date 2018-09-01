@@ -159,7 +159,7 @@ public class AbstractHelperQuery<I, E extends Serializable> implements Query<I, 
     }
 
     @Override
-    public <IS extends Serializable, ES extends BaseEntity<IS>> Subquery<IS, ES> createSubquery(String property, Class<ES> clazz) {
+    public <A extends Serializable, B extends BaseEntity<A>> Subquery<A, B> createSubquery(String property, Class<B> clazz) {
         return null;
     }
 
@@ -170,36 +170,6 @@ public class AbstractHelperQuery<I, E extends Serializable> implements Query<I, 
 
     @Override
     public Query<I, E> andNe(String property, Object value) {
-        return null;
-    }
-
-    @Override
-    public Query<I, E> normal() {
-        return null;
-    }
-
-    @Override
-    public Query<I, E> eq(String string, Object value) {
-        return null;
-    }
-
-    @Override
-    public Query<I, E> like(String string, String name) {
-        return null;
-    }
-
-    @Override
-    public Query<I, E> ne(String string, Object id) {
-        return null;
-    }
-
-    @Override
-    public Query<I, E> isNull(String string) {
-        return null;
-    }
-
-    @Override
-    public Query<I, E> or(String string, Object[] values) {
         return null;
     }
 }

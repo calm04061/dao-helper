@@ -7,7 +7,7 @@ import com.calm.dao.helper.condition.filter.*;
  *
  * @author dingqihui
  */
-interface Conditions {
+public interface Conditions {
     static SimpleCondition eq(FilterType type, String property, Object value) {
         return new SimpleCondition(type, property, new OperationItem<>(Operation.EQ, value));
     }

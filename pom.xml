@@ -47,6 +47,10 @@
                     <id>github</id>
                     <url>file:///${project.build.directory}/repo</url>
                 </repository>
+                <snapshotRepository>
+                    <id>nexus</id>
+                    <url>file:///${project.build.directory}/repo</url>
+                </snapshotRepository>
             </distributionManagement>
             <build>
                 <plugins>

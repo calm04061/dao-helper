@@ -1,6 +1,7 @@
 package com.calm.dao.helper.processing;
 
 import com.calm.dao.helper.annotation.Helper;
+import com.calm.dao.helper.constructor.ConstructorProcessor;
 import com.calm.dao.helper.field.FieldProcessor;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.*;
@@ -42,38 +43,21 @@ public class EntityProcessor extends AbstractProcessor {
             for (Element element : elementsAnnotatedWith) {
                 String elementPackage = mElementUtils.getPackageOf(element).getQualifiedName().toString();
                 TypeElement typeElement = (TypeElement) element;
-
-                List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
-                List<Element> fields = enclosedElements
-                        .stream()
-                        .filter(e -> e.getKind() == ElementKind.FIELD)
-                        .collect(Collectors.toList());
-                TypeSpec.Builder test = TypeSpec.classBuilder(typeElement.getSimpleName().toString() + "Query");
-                test.addModifiers(Modifier.PUBLIC);
+                String queryClassName = typeElement.getSimpleName().toString() + "Query";
+                TypeSpec.Builder queryBuilder = TypeSpec.classBuilder(queryClassName);
+                queryBuilder.addModifiers(Modifier.PUBLIC);
                 ClassName idClassName = ClassName.bestGuess(findIdType(typeElement));
                 ClassName entityClassName = ClassName.bestGuess(typeElement.getQualifiedName().toString());
                 HelperInfo helperInfo = load(typeElement, elementPackage);
                 ClassName superClassName = ClassName.bestGuess(helperInfo.getParentClassName());
                 String packageName = helperInfo.getPackageName();
                 ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(superClassName, idClassName, entityClassName);
-                test.superclass(parameterizedTypeName);
-                ClassName dao = ClassName.get(packageName, typeElement.getSimpleName().toString() + "Query");
+                queryBuilder.superclass(parameterizedTypeName);
+                ClassName dao = ClassName.get(packageName, queryClassName);
 
-                ServiceLoader<FieldProcessor> load = ServiceLoader.load(FieldProcessor.class, FieldProcessor.class.getClassLoader());
-                Iterator<FieldProcessor> iterator = load.iterator();
-                for (Element field : fields) {
-                    VariableElement var = (VariableElement) field;
-                    while (iterator.hasNext()) {
-                        FieldProcessor next = iterator.next();
-                        if (next.isSupport(var.asType())) {
-                            MethodSpec.Builder builder = next.buildMethod(var);
-                            builder.addModifiers(Modifier.PUBLIC);
-                            builder.returns(dao);
-                            test.addMethod(builder.build());
-                        }
-                    }
-                }
-                JavaFile.Builder builder = JavaFile.builder(packageName, test.build());
+                constructorProcess(queryBuilder, superClassName);
+                fieldProcess(typeElement, queryBuilder, dao);
+                JavaFile.Builder builder = JavaFile.builder(packageName, queryBuilder.build());
                 builder.build().writeTo(mFiler);
             }
 
@@ -83,6 +67,47 @@ public class EntityProcessor extends AbstractProcessor {
         }
 
         return true;
+    }
+
+    private void fieldProcess(TypeElement typeElement, TypeSpec.Builder test, ClassName dao) {
+        List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
+        ServiceLoader<FieldProcessor> load = ServiceLoader.load(FieldProcessor.class, FieldProcessor.class.getClassLoader());
+        Iterator<FieldProcessor> iterator = load.iterator();
+        List<Element> fields = enclosedElements
+                .stream()
+                .filter(e -> e.getKind() == ElementKind.FIELD)
+                .filter(e -> {
+                    Set<Modifier> modifiers = e.getModifiers();
+                    if (modifiers.contains(Modifier.STATIC)) {
+                        return false;
+                    }
+                    return !modifiers.contains(Modifier.FINAL);
+                })
+                .collect(Collectors.toList());
+        iterator.forEachRemaining(next -> {
+            for (Element field : fields) {
+                VariableElement var = (VariableElement) field;
+                if (next.isSupport(var.asType())) {
+                    MethodSpec.Builder builder = next.buildMethod(var);
+                    builder.addModifiers(Modifier.PUBLIC);
+                    builder.returns(dao);
+                    test.addMethod(builder.build());
+                }
+            }
+        });
+    }
+
+    private void constructorProcess(TypeSpec.Builder test, ClassName superClassName) {
+        ServiceLoader<ConstructorProcessor> load = ServiceLoader.load(ConstructorProcessor.class, ConstructorProcessor.class.getClassLoader());
+        Iterator<ConstructorProcessor> iterator = load.iterator();
+        while (iterator.hasNext()) {
+            ConstructorProcessor next = iterator.next();
+            if (next.isSupport(superClassName)) {
+                MethodSpec.Builder builder = next.buildMethod(superClassName);
+                builder.addModifiers(Modifier.PUBLIC);
+                test.addMethod(builder.build());
+            }
+        }
     }
 
     private String findIdType(TypeElement typeElement) {

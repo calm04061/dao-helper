@@ -14,6 +14,6 @@ branches:
 jdk:
 - oraclejdk8
 install:
-- mvn deploy -Dmaven.test.skip -Dgithub-token=${api_token}
+- mvn clean source:jar deploy -Dmaven.test.skip -Dgithub-token=${api_token}
 script:
 - ls

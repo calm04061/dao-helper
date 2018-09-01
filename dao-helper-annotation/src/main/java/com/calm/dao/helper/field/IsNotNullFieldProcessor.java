@@ -4,14 +4,9 @@ import com.google.auto.service.AutoService;
 import com.squareup.javapoet.MethodSpec;
 
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
 
 @AutoService({FieldProcessor.class})
-public class IsNotNullFieldProcessor extends AbstractFieldProcessor {
-    @Override
-    public boolean isSupport(TypeMirror typeMirror) {
-        return true;
-    }
+public class IsNotNullFieldProcessor extends NoArgsFieldProcessor {
 
     @Override
     public String option() {

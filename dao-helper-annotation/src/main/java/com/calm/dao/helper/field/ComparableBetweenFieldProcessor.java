@@ -18,7 +18,7 @@ public class ComparableBetweenFieldProcessor extends ComparableFieldProcessor {
     @Override
     public MethodSpec.Builder buildMethod(VariableElement var) {
         String name = var.getSimpleName().toString();
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("and" + upperFrist(name) + option());
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("and" + upperFirst(name) + option());
 
         TypeName typeName = TypeName.get(var.asType());
         ParameterSpec.Builder start = ParameterSpec.builder(typeName, "start");
@@ -30,7 +30,7 @@ public class ComparableBetweenFieldProcessor extends ComparableFieldProcessor {
     }
 
     public void buildMethodBody(MethodSpec.Builder builder, VariableElement var, String name) {
-        nullReturn(builder, name);
+        nullReturn(builder, var, name);
         builder.addStatement("add(\"" + var + "\"," + var + ")");
     }
 }

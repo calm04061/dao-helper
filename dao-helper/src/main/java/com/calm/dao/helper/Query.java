@@ -2,13 +2,14 @@ package com.calm.dao.helper;
 
 import com.calm.dao.helper.entity.Paging;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @param <I> id类型
  * @param <E> 实体类型
  */
-public interface Query<I,E> extends Subquery<I,E> {
+public interface Query<I,E extends Serializable> extends Subquery<I,E> {
 
 	/**
 	 * 分页查询

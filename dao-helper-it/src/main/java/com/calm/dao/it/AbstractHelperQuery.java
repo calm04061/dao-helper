@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.List;
 
 
-public class AbstractHelperQuery<I, E> implements Query<I, E> {
+public class AbstractHelperQuery<I, E extends Serializable> implements Query<I, E> {
     @Override
     public Paging<E> paging(int currentPage, int pageSize) {
         return null;

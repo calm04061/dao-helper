@@ -10,13 +10,14 @@ import com.calm.dao.helper.condition.filter.InCondition;
 import com.calm.dao.helper.condition.filter.MatchType;
 import com.calm.dao.helper.entity.LogisticDeletable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.calm.dao.helper.condition.filter.FilterType.AND;
 import static com.calm.dao.helper.condition.filter.FilterType.OR;
 
-public abstract class AbstractQuery<I, E> implements Query<I, E> {
+public abstract class AbstractQuery<I, E extends Serializable> implements Query<I, E> {
 
     private List<FilterCondition> conditions = new ArrayList<>();
 

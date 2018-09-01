@@ -387,44 +387,7 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
         return conditions;
     }
 
-    @Override
-    @Deprecated
-    public Query<I, E> normal() {
-        return this.andNormal();
-    }
-
-    @Override
-    @Deprecated
-    public Query<I, E> eq(String property, Object value) {
-        return this.andEq(property, value);
-    }
-
-    @Override
-    @Deprecated
-    public Query<I, E> like(String property, String name) {
-        return this.andLike(property, name);
-    }
-
-    @Override
-    @Deprecated
-    public Query<I, E> ne(String property, Object value) {
-        return this.andNe(property, value);
-    }
-
-    @Override
-    @Deprecated
-    public Query<I, E> isNull(String string) {
-        return this.andIsNull(string);
-    }
-
-    @Override
-    public Query<I, E> or(String string, Object[] values) {
-        return andIn(string, values);
-    }
-    protected boolean isEmptyString(Object value){
-        if (value instanceof String &&((String) value).trim().length() == 0) {
-            return true;
-        }
-        return false;
+    private boolean isEmptyString(Object value){
+        return value instanceof String && ((String) value).trim().length() == 0;
     }
 }

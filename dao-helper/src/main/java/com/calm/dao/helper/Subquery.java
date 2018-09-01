@@ -242,31 +242,14 @@ public interface Subquery<I, E extends Serializable> {
     /**
      * @param property 属性
      * @param clazz    子查询器
-     * @param <IS>     子查询ID
-     * @param <ES>     子查询实体
+     * @param <A>     子查询ID
+     * @param <B>     子查询实体
      * @return 子查询
      */
-    <IS extends Serializable, ES extends BaseEntity<IS>> Subquery<IS, ES> createSubquery(String property, Class<ES> clazz);
+    <A extends Serializable, B extends BaseEntity<A>> Subquery<A, B> createSubquery(String property, Class<B> clazz);
 
     Query<I, E> andNormal();
 
     Query<I, E> andNe(String property, Object value);
 
-    @Deprecated
-    Query<I, E> normal();
-
-    @Deprecated
-    Query<I, E> eq(String string, Object value);
-
-    @Deprecated
-    Query<I, E> like(String string, String name);
-
-    @Deprecated
-    Query<I, E> ne(String string, Object id);
-
-    @Deprecated
-    Query<I, E> isNull(String string);
-
-    @Deprecated
-    Query<I, E> or(String string, Object[] values);
 }

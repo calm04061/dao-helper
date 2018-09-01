@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>dao-helper</artifactId>
+        <artifactId>dao-helper-parent</artifactId>
         <groupId>com.calm</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
@@ -12,9 +12,9 @@
     <artifactId>dao-helper-it</artifactId>
     <dependencies>
         <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>javax.persistence-api</artifactId>
-            <version>2.2</version>
+            <groupId>com.calm</groupId>
+            <artifactId>dao-helper</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
@@ -29,8 +29,8 @@
                         <annotationProcessorPaths>
                             <path>
                                 <groupId>com.calm</groupId>
-                                <artifactId>dao-helper-annotaion</artifactId>
-                                <version>1.0.0-SNAPSHOT</version>
+                                <artifactId>dao-helper-annotation</artifactId>
+                                <version>${project.version}</version>
                             </path>
                         </annotationProcessorPaths>
                         <!-- put your configurations here -->
@@ -38,10 +38,9 @@
                     <dependencies>
                         <dependency>
                             <groupId>com.calm</groupId>
-                            <artifactId>dao-helper-annotaion</artifactId>
-                            <version>1.0.0-SNAPSHOT</version>
+                            <artifactId>dao-helper-annotation</artifactId>
+                            <version>${project.version}</version>
                         </dependency>
-
                     </dependencies>
                 </plugin>
             </plugins>

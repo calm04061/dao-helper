@@ -1,14 +1,18 @@
 # 测试
 sudo: required
 language: java
+cache:
+  directories:
+  - $HOME/.m2/repository/
 # 仓库的分支
 branches:
   only:
-  - master
   - develop
+  - feature/*
+  - tags
 jdk:
 - oraclejdk8
 install:
-- mvn deploy -Dmaven.test.skip -Dgithub-token=${api_token}
+- mvn clean source:jar deploy -Dmaven.test.skip -Dgithub-token=${api_token}
 script:
 - ls

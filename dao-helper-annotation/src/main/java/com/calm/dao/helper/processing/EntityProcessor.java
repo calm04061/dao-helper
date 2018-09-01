@@ -114,7 +114,8 @@ public class EntityProcessor extends AbstractProcessor {
         List<? extends TypeMirror> typeParameters = typeElement.getInterfaces();
         for (TypeMirror typeMirror : typeParameters) {
             DeclaredType declaredType = (DeclaredType) typeMirror;
-            if (declaredType.asElement().toString().equals("com.calm.dao.helper.entity.BaseEntity")) {
+            String type = declaredType.asElement().toString();
+            if (type.equals("com.calm.dao.helper.entity.BaseEntity")||type.equals("com.calm.dao.helper.entity.AbstractTreeEntity")) {
                 DeclaredType argsType = (DeclaredType) typeMirror;
                 List<? extends TypeMirror> typeArguments = argsType.getTypeArguments();
                 for (TypeMirror idType : typeArguments) {

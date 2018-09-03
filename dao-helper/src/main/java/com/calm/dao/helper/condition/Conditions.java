@@ -43,4 +43,8 @@ public interface Conditions {
     static FilterCondition ne(FilterType type, String property, Object value) {
         return new SimpleCondition(type, property, new OperationItem<>(Operation.NE, value));
     }
+
+    static FilterCondition between(FilterType type, String property, Comparable start, Comparable end) {
+        return new BetweenCondition(type, property, new Comparable[]{start, end});
+    }
 }

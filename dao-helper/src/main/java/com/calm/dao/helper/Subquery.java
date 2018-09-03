@@ -42,6 +42,16 @@ public interface Subquery<I, E extends Serializable> {
     Query<I, E> andEq(String property, Object value);
 
     /**
+     * 范围
+     *
+     * @param property 属性
+     * @param start    开始值
+     * @param end    结束值
+     * @return 查询器
+     */
+    Query<I, E> andBetween(String property, Comparable start,Comparable end);
+
+    /**
      * 存在
      *
      * @param property 属性
@@ -110,6 +120,17 @@ public interface Subquery<I, E extends Serializable> {
      * @return 查询器
      */
     Query<I, E> andNotNull(String property);
+
+    /**
+     * 范围
+     *
+     * @param property 属性
+     * @param start    开始值
+     * @param end    结束值
+     * @return 查询器
+     */
+    Query<I, E> orBetween(String property, Comparable start,Comparable end);
+
 
     /**
      * 模糊匹配(默认包含)
@@ -248,8 +269,18 @@ public interface Subquery<I, E extends Serializable> {
      */
     <A extends Serializable, B extends BaseEntity<A>> Subquery<A, B> createSubquery(String property, Class<B> clazz);
 
+    /**
+     * 非逻辑删除
+     * @return 查询器
+     */
     Query<I, E> andNormal();
 
+    /**
+     * 且不相等
+     * @param property 属性
+     * @param value 值
+     * @return 查询器
+     */
     Query<I, E> andNe(String property, Object value);
 
 }

@@ -19,11 +19,6 @@ public abstract class ComparableFieldProcessor extends AbstractFieldProcessor {
 
     static {
         try {
-            SUPPORT_TYPES.add(int.class.getName());
-            SUPPORT_TYPES.add(long.class.getName());
-            SUPPORT_TYPES.add(double.class.getName());
-            SUPPORT_TYPES.add(float.class.getName());
-            SUPPORT_TYPES.add(short.class.getName());
             Enumeration<URL> resources = ComparableFieldProcessor.class.getClassLoader().getResources("META-INF/processor/" + Comparable.class.getName());
             while (resources.hasMoreElements()) {
                 URL url = resources.nextElement();

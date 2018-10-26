@@ -44,6 +44,11 @@ public class AbstractHelperQuery<I, E extends Serializable> implements Query<I, 
     }
 
     @Override
+    public Query<I, E> andBetween(String property, Comparable start, Comparable end) {
+        return null;
+    }
+
+    @Override
     public Query<I, E> andIn(String property, Object[] value) {
         return null;
     }
@@ -80,6 +85,11 @@ public class AbstractHelperQuery<I, E extends Serializable> implements Query<I, 
 
     @Override
     public Query<I, E> andNotNull(String property) {
+        return null;
+    }
+
+    @Override
+    public Query<I, E> orBetween(String property, Comparable start, Comparable end) {
         return null;
     }
 

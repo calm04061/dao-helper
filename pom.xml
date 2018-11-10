@@ -94,7 +94,6 @@
                 <artifactId>gitflow-maven-plugin</artifactId>
                 <version>1.9.0</version>
                 <configuration>
-                    <pushRemote>true</pushRemote>
                     <skipTestProject>true</skipTestProject>
                 </configuration>
             </plugin>

@@ -25,12 +25,14 @@ public class ComparableBetweenFieldProcessor extends ComparableFieldProcessor {
         ParameterSpec.Builder end = ParameterSpec.builder(typeName, "end");
         builder.addParameter(start.build());
         builder.addParameter(end.build());
+        nullReturn(builder, var, "start");
+        nullReturn(builder, var, "end");
+        builder.addStatement("andBetween(\"" + var + "\",  start  ,  end )");
         builder.addStatement("return this");
         return builder;
     }
 
     public void buildMethodBody(MethodSpec.Builder builder, VariableElement var, String name) {
-        nullReturn(builder, var, name);
-        builder.addStatement("add(\"" + var + "\"," + var + ")");
+        throw new UnsupportedOperationException();
     }
 }

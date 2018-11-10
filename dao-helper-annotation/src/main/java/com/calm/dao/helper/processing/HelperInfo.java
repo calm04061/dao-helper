@@ -1,8 +1,10 @@
 package com.calm.dao.helper.processing;
 
+import com.calm.dao.helper.PersistenceFramework;
+
 public class HelperInfo {
     private String packageName;
-    private String parentClassName;
+    private PersistenceFramework persistenceFramework;
 
     public String getPackageName() {
         return packageName;
@@ -12,11 +14,11 @@ public class HelperInfo {
         this.packageName = packageName;
     }
 
-    public String getParentClassName() {
-        return parentClassName;
+    public PersistenceFramework getPersistenceFramework() {
+        return persistenceFramework;
     }
 
-    public void setParentClassName(String parentClassName) {
-        this.parentClassName = parentClassName;
+    public void setPersistenceFramework(PersistenceFramework persistenceFramework) {
+        this.persistenceFramework = persistenceFramework;
     }
 }

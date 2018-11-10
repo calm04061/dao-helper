@@ -17,6 +17,7 @@
         <module>dao-helper-annotation</module>
         <module>dao-helper-it</module>
         <module>dao-helper</module>
+        <module>dao-helper-jpa</module>
     </modules>
     <repositories>
         <repository>

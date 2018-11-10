@@ -13,7 +13,7 @@
     <dependencies>
         <dependency>
             <groupId>com.calm</groupId>
-            <artifactId>dao-helper</artifactId>
+            <artifactId>dao-helper-jpa</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -32,16 +32,14 @@
                                 <artifactId>dao-helper-annotation</artifactId>
                                 <version>${project.version}</version>
                             </path>
+                            <path>
+                                <groupId>com.calm</groupId>
+                                <artifactId>dao-helper-jpa</artifactId>
+                                <version>${project.version}</version>
+                            </path>
                         </annotationProcessorPaths>
                         <!-- put your configurations here -->
                     </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>com.calm</groupId>
-                            <artifactId>dao-helper-annotation</artifactId>
-                            <version>${project.version}</version>
-                        </dependency>
-                    </dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -1,11 +1,16 @@
 package com.calm.dao.it.entity;
 
+import com.calm.dao.helper.PersistenceFramework;
 import com.calm.dao.helper.annotation.Helper;
 import com.calm.dao.helper.entity.BaseEntity;
-import com.calm.dao.it.AbstractHelperQuery;
 
-@Helper(queryParent = AbstractHelperQuery.class, packageName = "com.calm.dao.it.query")
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
+@Helper(framework = PersistenceFramework.JPA, packageName = "com.calm.dao.it.query")
 public class User implements BaseEntity<String> {
+    @Id
     private String id;
     private int age;
 

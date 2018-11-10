@@ -1,12 +1,14 @@
 package com.calm.dao.helper;
 
+import com.calm.dao.helper.entity.BaseEntity;
+
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author dingqihui
  */
-public interface IBaseDao<I, E extends Serializable, Q extends Query<I, E>> {
+public interface IBaseDao<I extends Serializable, E extends BaseEntity<I>, Q extends Query<I, E>> {
 
     /**
      * 根据ID查询对象
@@ -33,13 +35,6 @@ public interface IBaseDao<I, E extends Serializable, Q extends Query<I, E>> {
      * @return 更新后的对象
      */
     E update(E entity);
-
-    /**
-     * 删除
-     *
-     * @param entities 对象
-     */
-    void delete(E... entities);
 
     /**
      * 删除

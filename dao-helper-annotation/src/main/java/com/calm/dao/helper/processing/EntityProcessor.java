@@ -1,5 +1,6 @@
 package com.calm.dao.helper.processing;
 
+import com.calm.dao.helper.PersistenceFramework;
 import com.calm.dao.helper.annotation.Helper;
 import com.calm.dao.helper.constructor.ConstructorProcessor;
 import com.calm.dao.helper.field.FieldProcessor;
@@ -49,7 +50,7 @@ public class EntityProcessor extends AbstractProcessor {
                 ClassName idClassName = ClassName.bestGuess(findIdType(typeElement));
                 ClassName entityClassName = ClassName.bestGuess(typeElement.getQualifiedName().toString());
                 HelperInfo helperInfo = load(typeElement, elementPackage);
-                ClassName superClassName = ClassName.bestGuess(helperInfo.getParentClassName());
+                ClassName superClassName = ClassName.bestGuess(helperInfo.getPersistenceFramework().getQueryParent());
                 String packageName = helperInfo.getPackageName();
                 ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(superClassName, idClassName, entityClassName);
                 queryBuilder.superclass(parameterizedTypeName);
@@ -98,10 +99,8 @@ public class EntityProcessor extends AbstractProcessor {
     }
 
     private void constructorProcess(TypeSpec.Builder test, ClassName superClassName) {
-        ServiceLoader<ConstructorProcessor> load = ServiceLoader.load(ConstructorProcessor.class, ConstructorProcessor.class.getClassLoader());
-        Iterator<ConstructorProcessor> iterator = load.iterator();
-        while (iterator.hasNext()) {
-            ConstructorProcessor next = iterator.next();
+        ServiceLoader<ConstructorProcessor> load = ServiceLoader.load(ConstructorProcessor.class, EntityProcessor.class.getClassLoader());
+        for (ConstructorProcessor next : load) {
             if (next.isSupport(superClassName)) {
                 MethodSpec.Builder builder = next.buildMethod(superClassName);
                 builder.addModifiers(Modifier.PUBLIC);
@@ -139,8 +138,8 @@ public class EntityProcessor extends AbstractProcessor {
 
                 elementValues.forEach((key, value) -> {
                     String attr = key.getSimpleName().toString();
-                    if (attr.equals("queryParent")) {
-                        helperInfo.setParentClassName(value.getValue().toString());
+                    if (attr.equals("framework")) {
+                        helperInfo.setPersistenceFramework(PersistenceFramework.valueOf(value.getValue().toString()));
                     } else if (attr.equals("packageName")) {
                         helperInfo.setPackageName(value.getValue().toString());
                     }

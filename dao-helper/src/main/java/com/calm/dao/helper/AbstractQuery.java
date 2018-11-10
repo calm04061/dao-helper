@@ -18,7 +18,7 @@ import java.util.List;
 import static com.calm.dao.helper.condition.filter.FilterType.AND;
 import static com.calm.dao.helper.condition.filter.FilterType.OR;
 
-public abstract class AbstractQuery<I, E extends Serializable> implements Query<I, E> {
+public abstract class AbstractQuery<I extends Serializable, E extends Serializable> implements Query<I, E> {
     public static final Logger LOGGER = LoggerFactory.getLogger(AbstractQuery.class);
     private List<FilterCondition> conditions = new ArrayList<>();
 

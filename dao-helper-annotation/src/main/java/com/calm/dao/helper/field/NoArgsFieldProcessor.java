@@ -8,7 +8,7 @@ import javax.lang.model.type.TypeMirror;
 public abstract class NoArgsFieldProcessor extends AbstractFieldProcessor {
     @Override
     public boolean isSupport(TypeMirror typeMirror) {
-        return true;
+        return !typeMirror.getKind().isPrimitive();
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.calm.dao.it.query.UserQuery;
 public class UserDao extends JpaDao<String, User, UserQuery> {
 
     @Override
-    public UserQuery query(Class<User> clazz) {
-        return new UserQuery(getEntityManager(), clazz, getOperation2PredicateFinder());
+    public UserQuery query() {
+        return new UserQuery(getEntityManager(), getEntityType(), getOperation2PredicateFinder());
     }
 }

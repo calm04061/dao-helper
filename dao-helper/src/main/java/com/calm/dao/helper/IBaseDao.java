@@ -13,11 +13,10 @@ public interface IBaseDao<I extends Serializable, E extends BaseEntity<I>, Q ext
     /**
      * 根据ID查询对象
      *
-     * @param clazz 查询类型
-     * @param id    id
+     * @param id id
      * @return 实体类
      */
-    E loadById(Class<E> clazz, I id);
+    E loadById(I id);
 
 
     /**
@@ -27,6 +26,14 @@ public interface IBaseDao<I extends Serializable, E extends BaseEntity<I>, Q ext
      * @return 插入后的实体
      */
     E insert(E entity);
+
+    /**
+     * 插入对象
+     *
+     * @param entity 保存对象
+     * @return 插入后的实体
+     */
+    void saveAll(List<E> entity);
 
     /**
      * 更新
@@ -44,73 +51,74 @@ public interface IBaseDao<I extends Serializable, E extends BaseEntity<I>, Q ext
     void delete(List<E> entity);
 
     /**
+     * 删除
+     *
+     * @param id 对象
+     */
+    void deleteById(I id);
+
+    /**
      * 创建查询对象
      *
-     * @param clazz 查询类型
      * @return 查询对象
      */
-    Q query(Class<E> clazz);
+    Q query();
 
     /**
      * 根据查询语句查询
      *
      * @param jql   查询语句
-     * @param clazz 实体类类型
      * @param args  参数
      * @return 查询结果集
      */
-    List<E> listByQuery(String jql, Class<E> clazz, Object... args);
+    List<E> listByQuery(String jql, Object... args);
 
     /**
      * 根据查询语句查询
      *
      * @param jql   查询语句
-     * @param clazz 实体类类型
      * @param args  参数
      * @return 查询结果对象
      */
-    E loadByQuery(String jql, Class<E> clazz, Object... args);
+    E loadByQuery(String jql, Object... args);
 
     /**
      * 根据原生查询语句查询
      *
      * @param sql   查询原生语句
-     * @param clazz 实体类类型
      * @param args  参数
      * @return 结果集
      */
-    List<E> listByNativeQuery(String sql, Class<E> clazz, Object... args);
+    List<E> listByNativeQuery(String sql, Object... args);
 
     /**
      * 根据原生查询语句查询
      *
      * @param sql   查询原生语句
-     * @param clazz 实体类类型
      * @param args  参数
      * @return 结果集
      */
-    E loadByNativeQuery(String sql, Class<E> clazz, Object... args);
+    E loadByNativeQuery(String sql, Object... args);
 
     /**
      * 根据原生查询语句查询
      *
      * @param sql    查询原生语句
      * @param mapper 映射器
-     * @param clazz  实体类类型
      * @param args   参数
      * @return 结果对象
      */
-    E loadNativeQuery(String sql, Mapper<E> mapper, Class<E> clazz, Object... args);
+    E loadNativeQuery(String sql, Mapper<E> mapper, Object... args);
 
     /**
      * 根据原生查询语句查询
      *
      * @param sql    查询原生语句
      * @param mapper 映射器
-     * @param clazz  实体类类型
      * @param args   参数
      * @return 结果对集合
      */
-    List<E> listNativeQuery(String sql, Mapper<E> mapper, Class<E> clazz, Object... args);
+    List<E> listNativeQuery(String sql, Mapper<E> mapper, Object... args);
 
+    Class<E> getEntityType();
 }

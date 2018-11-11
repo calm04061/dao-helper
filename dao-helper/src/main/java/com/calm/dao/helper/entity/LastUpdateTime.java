@@ -1,10 +1,10 @@
 package com.calm.dao.helper.entity;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 public interface LastUpdateTime {
 
-    Timestamp getLastUpdateTime();
+    Date getLastUpdateTime();
 
-    void setLastUpdateTime(Timestamp lastUpdateTime);
+    void setLastUpdateTime(Date lastUpdateTime);
 }

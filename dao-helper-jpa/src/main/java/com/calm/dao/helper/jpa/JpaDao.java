@@ -6,14 +6,24 @@ import com.calm.dao.helper.entity.BaseEntity;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class JpaDao<I extends Serializable, E extends BaseEntity<I>, Q extends JpaAbstractQuery<I, E>> implements IBaseDao<I, E, Q> {
     private EntityManager entityManager;
     private Operation2PredicateFinder operation2PredicateFinder;
+    private Class<E> entityType;
+
+    public JpaDao() {
+        ParameterizedType type = (ParameterizedType) this.getClass()
+                .getGenericSuperclass();
+        entityType = (Class<E>) type.getActualTypeArguments()[1];
+    }
+
     @Override
-    public E loadById(Class<E> clazz, I id) {
-        return entityManager.find(clazz, id);
+    public E loadById(I id) {
+        return entityManager.find(entityType, id);
     }
 
     @Override
@@ -37,32 +47,32 @@ public abstract class JpaDao<I extends Serializable, E extends BaseEntity<I>, Q 
 
 
     @Override
-    public List<E> listByQuery(String jql, Class<E> clazz, Object... args) {
+    public List<E> listByQuery(String jql, Object... args) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public E loadByQuery(String jql, Class<E> clazz, Object... args) {
+    public E loadByQuery(String jql, Object... args) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<E> listByNativeQuery(String sql, Class<E> clazz, Object... args) {
+    public List<E> listByNativeQuery(String sql, Object... args) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public E loadByNativeQuery(String sql, Class<E> clazz, Object... args) {
+    public E loadByNativeQuery(String sql, Object... args) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public E loadNativeQuery(String sql, Mapper<E> mapper, Class<E> clazz, Object... args) {
+    public E loadNativeQuery(String sql, Mapper<E> mapper, Object... args) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<E> listNativeQuery(String sql, Mapper<E> mapper, Class<E> clazz, Object... args) {
+    public List<E> listNativeQuery(String sql, Mapper<E> mapper, Object... args) {
         throw new UnsupportedOperationException();
     }
 
@@ -80,5 +90,28 @@ public abstract class JpaDao<I extends Serializable, E extends BaseEntity<I>, Q 
 
     public Operation2PredicateFinder getOperation2PredicateFinder() {
         return operation2PredicateFinder;
+    }
+
+    @Override
+    public void deleteById(I id) {
+        E e = loadById(id);
+        delete(Collections.singletonList(e));
+    }
+
+    @Override
+    public void saveAll(List<E> entity) {
+        for (E e : entity) {
+            I id = e.getId();
+            if (id == null) {
+                insert(e);
+            } else {
+                update(e);
+            }
+        }
+    }
+
+    @Override
+    public Class<E> getEntityType() {
+        return entityType;
     }
 }

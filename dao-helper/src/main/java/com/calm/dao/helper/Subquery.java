@@ -14,7 +14,7 @@ import java.util.List;
  * @param <I> id
  * @param <E> 实体
  */
-public interface Subquery<I extends Serializable, E extends Serializable> {
+public interface Subquery<I extends Serializable, E extends BaseEntity<I>> {
 
     /**
      * 多个or条件

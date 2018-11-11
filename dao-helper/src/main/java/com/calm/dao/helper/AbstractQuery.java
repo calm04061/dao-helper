@@ -8,6 +8,7 @@ import com.calm.dao.helper.condition.filter.FilterCondition;
 import com.calm.dao.helper.condition.filter.FilterType;
 import com.calm.dao.helper.condition.filter.InCondition;
 import com.calm.dao.helper.condition.filter.MatchType;
+import com.calm.dao.helper.entity.BaseEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +19,7 @@ import java.util.List;
 import static com.calm.dao.helper.condition.filter.FilterType.AND;
 import static com.calm.dao.helper.condition.filter.FilterType.OR;
 
-public abstract class AbstractQuery<I extends Serializable, E extends Serializable> implements Query<I, E> {
+public abstract class AbstractQuery<I extends Serializable, E extends BaseEntity<I>> implements Query<I, E> {
     public static final Logger LOGGER = LoggerFactory.getLogger(AbstractQuery.class);
     private List<FilterCondition> conditions = new ArrayList<>();
 

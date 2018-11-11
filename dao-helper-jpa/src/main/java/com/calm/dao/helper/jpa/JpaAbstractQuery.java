@@ -18,7 +18,7 @@ import javax.persistence.criteria.*;
 import java.io.Serializable;
 import java.util.*;
 
-public class JpaAbstractQuery<I extends Serializable, E extends Serializable> extends AbstractQuery<I, E> {
+public class JpaAbstractQuery<I extends Serializable, E extends BaseEntity<I>> extends AbstractQuery<I, E> {
     private EntityManager entityManager;
     private Class<E> entityType;
     private Operation2PredicateFinder operation2PredicateFinder;

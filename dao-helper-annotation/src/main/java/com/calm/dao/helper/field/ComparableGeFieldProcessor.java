@@ -14,7 +14,6 @@ public class ComparableGeFieldProcessor extends ComparableFieldProcessor {
     }
 
     public void buildMethodBody(MethodSpec.Builder builder, VariableElement var, String name) {
-        nullReturn(builder, var, name);
-        builder.addStatement("andGe(\"" + var + "\"," + var + ")");
+        builder.addStatement("ge(\"" + var + "\"," + var + ")");
     }
 }

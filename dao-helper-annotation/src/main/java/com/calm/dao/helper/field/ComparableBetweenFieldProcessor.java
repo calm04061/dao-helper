@@ -18,16 +18,14 @@ public class ComparableBetweenFieldProcessor extends ComparableFieldProcessor {
     @Override
     public MethodSpec.Builder buildMethod(VariableElement var) {
         String name = var.getSimpleName().toString();
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("and" + upperFirst(name) + option());
+        MethodSpec.Builder builder = MethodSpec.methodBuilder(name + option());
 
         TypeName typeName = TypeName.get(var.asType());
         ParameterSpec.Builder start = ParameterSpec.builder(typeName, "start");
         ParameterSpec.Builder end = ParameterSpec.builder(typeName, "end");
         builder.addParameter(start.build());
         builder.addParameter(end.build());
-        nullReturn(builder, var, "start");
-        nullReturn(builder, var, "end");
-        builder.addStatement("andBetween(\"" + var + "\",  start  ,  end )");
+        builder.addStatement("between(\"" + var + "\",  start  ,  end )");
         builder.addStatement("return this");
         return builder;
     }

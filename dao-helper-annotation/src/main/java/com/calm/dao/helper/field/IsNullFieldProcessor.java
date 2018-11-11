@@ -14,6 +14,6 @@ public class IsNullFieldProcessor extends NoArgsFieldProcessor {
     }
 
     public void buildMethodBody(MethodSpec.Builder builder, VariableElement var, String name) {
-        builder.addStatement("andIsNull(\"" + var + "\")");
+        builder.addStatement("isNull(\"" + var + "\")");
     }
 }

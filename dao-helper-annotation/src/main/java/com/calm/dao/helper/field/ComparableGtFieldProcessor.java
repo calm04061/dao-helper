@@ -15,7 +15,6 @@ public class ComparableGtFieldProcessor extends ComparableFieldProcessor {
     }
 
     public void buildMethodBody(MethodSpec.Builder builder, VariableElement var, String name) {
-        nullReturn(builder, var, name);
-        builder.addStatement("andGt(\"" + var + "\"," + var + ")");
+        builder.addStatement("gt(\"" + var + "\"," + var + ")");
     }
 }

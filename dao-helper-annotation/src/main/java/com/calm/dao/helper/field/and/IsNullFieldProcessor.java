@@ -1,19 +1,20 @@
-package com.calm.dao.helper.field;
+package com.calm.dao.helper.field.and;
 
+import com.calm.dao.helper.field.FieldProcessor;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.MethodSpec;
 
 import javax.lang.model.element.VariableElement;
 
 @AutoService({FieldProcessor.class})
-public class StringEndWithFieldProcessor extends StringFieldProcessor {
+public class IsNullFieldProcessor extends NoArgsFieldProcessor {
 
     @Override
     public String option() {
-        return "EndWith";
+        return "IsNull";
     }
 
     public void buildMethodBody(MethodSpec.Builder builder, VariableElement var, String name) {
-        builder.addStatement("like(\"" + var + "\",\"%\"+" + var + ")");
+        builder.addStatement("isNull(\"" + var + "\")");
     }
 }

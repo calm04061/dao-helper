@@ -1,19 +1,20 @@
-package com.calm.dao.helper.field;
+package com.calm.dao.helper.field.or;
 
+import com.calm.dao.helper.field.FieldProcessor;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.MethodSpec;
 
 import javax.lang.model.element.VariableElement;
 
 @AutoService({FieldProcessor.class})
-public class IsNotNullFieldProcessor extends NoArgsFieldProcessor {
+public class StringStartWithFieldProcessor extends StringFieldProcessor {
 
     @Override
     public String option() {
-        return "IsNotNull";
+        return "StartWith";
     }
 
     public void buildMethodBody(MethodSpec.Builder builder, VariableElement var, String name) {
-        builder.addStatement("notNull(\"" + var + "\")");
+        builder.addStatement("orLike(\"" + var + "\"," + var + "+\"%\")");
     }
 }

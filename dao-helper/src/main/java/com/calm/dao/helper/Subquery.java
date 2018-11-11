@@ -260,6 +260,7 @@ public interface Subquery<I extends Serializable, E extends BaseEntity<I>> {
      */
     Subquery<I, E> orIn(String property, Object[] value);
 
+    Query<I, E> orIn(String property, List<?> value);
     /**
      * @param property 属性
      * @param clazz    子查询器

@@ -1,4 +1,4 @@
-package com.calm.dao.helper.field;
+package com.calm.dao.helper.field.or;
 
 import com.squareup.javapoet.MethodSpec;
 
@@ -14,7 +14,7 @@ public abstract class NoArgsFieldProcessor extends AbstractFieldProcessor {
     @Override
     public MethodSpec.Builder buildMethod(VariableElement var) {
         String name = var.getSimpleName().toString();
-        MethodSpec.Builder builder = MethodSpec.methodBuilder(name + option());
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("or" + upperFirst(name) + option());
 
         buildMethodBody(builder, var, name);
         builder.addStatement("return this");

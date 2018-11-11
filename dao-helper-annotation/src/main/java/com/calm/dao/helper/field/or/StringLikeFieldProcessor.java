@@ -1,24 +1,20 @@
-package com.calm.dao.helper.field;
+package com.calm.dao.helper.field.or;
 
+import com.calm.dao.helper.field.FieldProcessor;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.MethodSpec;
 
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
 
 @AutoService({FieldProcessor.class})
-public class ObjectEqFieldProcessor extends AbstractFieldProcessor {
-    @Override
-    public boolean isSupport(TypeMirror typeMirror) {
-        return true;
-    }
+public class StringLikeFieldProcessor extends StringFieldProcessor {
 
     @Override
     public String option() {
-        return "Eq";
+        return "Like";
     }
 
     public void buildMethodBody(MethodSpec.Builder builder, VariableElement var, String name) {
-        builder.addStatement("eq(\"" + var + "\"," + var + ")");
+        builder.addStatement("orLike(\"" + var + "\",\"%\"+" + var + "+\"%\")");
     }
 }

@@ -311,7 +311,14 @@ public abstract class AbstractQuery<I extends Serializable, E extends BaseEntity
         conditions.add(new InCondition(FilterType.OR, property, value));
         return this;
     }
-
+    /* (non-Javadoc)
+     * @see com.aixuexi.common.dao.ObjectQuery#in(java.lang.String, java.lang.Object[])
+     */
+    @Override
+    public Query<I, E> orIn(String property, List<?> value) {
+        conditions.add(new InCondition(FilterType.OR, property, value.toArray()));
+        return this;
+    }
     @Override
     public Query<I, E> ne(String property, Object value) {
         if (isBlankString(value)) {

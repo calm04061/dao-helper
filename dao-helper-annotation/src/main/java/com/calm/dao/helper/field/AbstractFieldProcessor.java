@@ -43,6 +43,6 @@ public abstract class AbstractFieldProcessor implements FieldProcessor {
 
     private boolean isSimple(VariableElement var) {
         TypeMirror typeMirror = var.asType();
-        return typeMirror instanceof PrimitiveType;
+        return typeMirror.getKind().isPrimitive();
     }
 }

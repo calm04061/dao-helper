@@ -2,6 +2,7 @@ package com.calm.dao.helper;
 
 import com.calm.dao.helper.entity.BaseEntity;
 
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public interface IBaseDao<I extends Serializable, E extends BaseEntity<I>, Q ext
      * @param entity 保存对象
      * @return 插入后的实体
      */
+    @Transactional
     E insert(E entity);
 
     /**
@@ -33,6 +35,7 @@ public interface IBaseDao<I extends Serializable, E extends BaseEntity<I>, Q ext
      * @param entity 保存对象
      * @return 插入后的实体
      */
+    @Transactional
     void saveAll(List<E> entity);
 
     /**
@@ -41,6 +44,7 @@ public interface IBaseDao<I extends Serializable, E extends BaseEntity<I>, Q ext
      * @param entity 保存对象
      * @return 更新后的对象
      */
+    @Transactional
     E update(E entity);
 
     /**
@@ -48,6 +52,7 @@ public interface IBaseDao<I extends Serializable, E extends BaseEntity<I>, Q ext
      *
      * @param entity 对象
      */
+    @Transactional
     void delete(List<E> entity);
 
     /**
@@ -55,6 +60,7 @@ public interface IBaseDao<I extends Serializable, E extends BaseEntity<I>, Q ext
      *
      * @param id 对象
      */
+    @Transactional
     void deleteById(I id);
 
     /**

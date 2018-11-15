@@ -2,7 +2,7 @@ package com.calm.dao.helper.processing;
 
 import com.calm.dao.helper.PersistenceFramework;
 import com.calm.dao.helper.annotation.Helper;
-import com.calm.dao.helper.constructor.ConstructorProcessor;
+import com.calm.dao.helper.method.MethodProcessor;
 import com.calm.dao.helper.field.FieldProcessor;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.*;
@@ -56,7 +56,7 @@ public class EntityProcessor extends AbstractProcessor {
                 queryBuilder.superclass(parameterizedTypeName);
                 ClassName dao = ClassName.get(packageName, queryClassName);
 
-                constructorProcess(queryBuilder, superClassName);
+                methodProcessor(queryBuilder, superClassName, dao);
                 fieldProcess(typeElement, queryBuilder, dao);
                 JavaFile.Builder builder = JavaFile.builder(packageName, queryBuilder.build());
                 builder.build().writeTo(mFiler);
@@ -98,13 +98,13 @@ public class EntityProcessor extends AbstractProcessor {
         });
     }
 
-    private void constructorProcess(TypeSpec.Builder test, ClassName superClassName) {
-        ServiceLoader<ConstructorProcessor> load = ServiceLoader.load(ConstructorProcessor.class, EntityProcessor.class.getClassLoader());
-        for (ConstructorProcessor next : load) {
+    private void methodProcessor(TypeSpec.Builder typeBuilder, ClassName superClassName, ClassName queryClassName) {
+        ServiceLoader<MethodProcessor> load = ServiceLoader.load(MethodProcessor.class, EntityProcessor.class.getClassLoader());
+        for (MethodProcessor next : load) {
             if (next.isSupport(superClassName)) {
-                MethodSpec.Builder builder = next.buildMethod(superClassName);
+                MethodSpec.Builder builder = next.buildMethod(superClassName, queryClassName);
                 builder.addModifiers(Modifier.PUBLIC);
-                test.addMethod(builder.build());
+                typeBuilder.addMethod(builder.build());
             }
         }
     }
@@ -114,7 +114,7 @@ public class EntityProcessor extends AbstractProcessor {
         for (TypeMirror typeMirror : typeParameters) {
             DeclaredType declaredType = (DeclaredType) typeMirror;
             String type = declaredType.asElement().toString();
-            if (type.equals("com.calm.dao.helper.entity.BaseEntity")||type.equals("com.calm.dao.helper.entity.AbstractTreeEntity")) {
+            if (type.equals("com.calm.dao.helper.entity.BaseEntity") || type.equals("com.calm.dao.helper.entity.AbstractTreeEntity")) {
                 DeclaredType argsType = (DeclaredType) typeMirror;
                 List<? extends TypeMirror> typeArguments = argsType.getTypeArguments();
                 for (TypeMirror idType : typeArguments) {

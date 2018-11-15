@@ -46,7 +46,7 @@ public interface Subquery<I extends Serializable, E extends BaseEntity<I>> {
      *
      * @param property 属性
      * @param start    开始值
-     * @param end    结束值
+     * @param end      结束值
      * @return 查询器
      */
     Query<I, E> between(String property, Comparable start, Comparable end);
@@ -126,10 +126,10 @@ public interface Subquery<I extends Serializable, E extends BaseEntity<I>> {
      *
      * @param property 属性
      * @param start    开始值
-     * @param end    结束值
+     * @param end      结束值
      * @return 查询器
      */
-    Query<I, E> orBetween(String property, Comparable start,Comparable end);
+    Query<I, E> orBetween(String property, Comparable start, Comparable end);
 
 
     /**
@@ -261,27 +261,32 @@ public interface Subquery<I extends Serializable, E extends BaseEntity<I>> {
     Subquery<I, E> orIn(String property, Object[] value);
 
     Query<I, E> orIn(String property, List<?> value);
+
     /**
      * @param property 属性
      * @param clazz    子查询器
-     * @param <A>     子查询ID
-     * @param <B>     子查询实体
+     * @param <A>      子查询ID
+     * @param <B>      子查询实体
      * @return 子查询
      */
     <A extends Serializable, B extends BaseEntity<A>> Subquery<A, B> createSubquery(String property, Class<B> clazz);
 
     /**
      * 非逻辑删除
+     *
      * @return 查询器
      */
     Query<I, E> normal();
 
     /**
      * 且不相等
+     *
      * @param property 属性
-     * @param value 值
+     * @param value    值
      * @return 查询器
      */
     Query<I, E> ne(String property, Object value);
+
+    Query<I, E> or();
 
 }

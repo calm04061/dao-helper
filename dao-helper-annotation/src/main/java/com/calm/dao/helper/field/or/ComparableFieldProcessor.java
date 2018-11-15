@@ -1,7 +1,5 @@
 package com.calm.dao.helper.field.or;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.lang.model.type.TypeMirror;
 import java.io.BufferedReader;
@@ -14,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public abstract class ComparableFieldProcessor extends AbstractFieldProcessor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ComparableFieldProcessor.class);
+    //    private static final Logger LOGGER = LoggerFactory.getLogger(ComparableFieldProcessor.class);
     private static final Set<String> SUPPORT_TYPES = new HashSet<>();
 
     static {
@@ -28,7 +26,7 @@ public abstract class ComparableFieldProcessor extends AbstractFieldProcessor {
                 }
             }
         } catch (IOException e) {
-            LOGGER.error("load Comparable", e);
+            System.err.println(e.getMessage());
         }
     }
 

@@ -18,16 +18,22 @@ import javax.persistence.criteria.*;
 import java.io.Serializable;
 import java.util.*;
 
-public class JpaAbstractQuery<I extends Serializable, E extends BaseEntity<I>> extends AbstractQuery<I, E> {
+public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEntity<I>> extends AbstractQuery<I, E> {
     private EntityManager entityManager;
     private Class<E> entityType;
     private Operation2PredicateFinder operation2PredicateFinder;
-
+    private Subquery<I, E> parent;
 
     public JpaAbstractQuery(EntityManager entityManager, Class<E> entityType, Operation2PredicateFinder operation2PredicateFinder) {
         this.entityManager = entityManager;
         this.entityType = entityType;
         this.operation2PredicateFinder = operation2PredicateFinder;
+    }
+
+    public JpaAbstractQuery(Subquery<I, E> parent, Class<E> entityType, Operation2PredicateFinder operation2PredicateFinder) {
+        this.entityType = entityType;
+        this.operation2PredicateFinder = operation2PredicateFinder;
+        this.parent = parent;
     }
 
     @Override

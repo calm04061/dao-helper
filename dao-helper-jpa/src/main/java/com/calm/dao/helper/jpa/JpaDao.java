@@ -1,10 +1,11 @@
 package com.calm.dao.helper.jpa;
 
 import com.calm.dao.helper.IBaseDao;
-import com.calm.dao.helper.Mapper;
 import com.calm.dao.helper.entity.BaseEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -52,32 +53,71 @@ public abstract class JpaDao<I extends Serializable, E extends BaseEntity<I>, Q 
 
     @Override
     public List<E> listByQuery(String jql, Object... args) {
-        throw new UnsupportedOperationException();
+        TypedQuery<E> query = getEntityManager().createQuery(jql, getEntityType());
+        if (args != null && args.length > 0) {
+            for (int i = 0; i < args.length; i++) {
+                query.setParameter(i + 1, args[i]);
+            }
+        }
+        return query.getResultList();
     }
 
     @Override
     public E loadByQuery(String jql, Object... args) {
-        throw new UnsupportedOperationException();
+        TypedQuery<E> query = getEntityManager().createQuery(jql, getEntityType());
+        if (args != null && args.length > 0) {
+            for (int i = 0; i < args.length; i++) {
+                query.setParameter(i + 1, args[i]);
+            }
+        }
+        return query.getSingleResult();
     }
 
     @Override
     public List<E> listByNativeQuery(String sql, Object... args) {
-        throw new UnsupportedOperationException();
+        Query nativeQuery = entityManager.createNativeQuery(sql, getEntityType());
+        if (args != null && args.length > 0) {
+            for (int i = 0; i < args.length; i++) {
+                nativeQuery.setParameter(i + 1, args[i]);
+            }
+        }
+        return nativeQuery.getResultList();
+
     }
 
     @Override
     public E loadByNativeQuery(String sql, Object... args) {
-        throw new UnsupportedOperationException();
+        Query nativeQuery = entityManager.createNativeQuery(sql, getEntityType());
+        if (args != null && args.length > 0) {
+            for (int i = 0; i < args.length; i++) {
+                nativeQuery.setParameter(i + 1, args[i]);
+            }
+        }
+        Object singleResult = nativeQuery.getSingleResult();
+        return getEntityType().cast(singleResult);
     }
 
     @Override
-    public E loadNativeQuery(String sql, Mapper<E> mapper, Object... args) {
-        throw new UnsupportedOperationException();
+    public E loadNativeQuery(String sql, String resultMapping, Object... args) {
+        Query nativeQuery = entityManager.createNativeQuery(sql, resultMapping);
+        if (args != null && args.length > 0) {
+            for (int i = 0; i < args.length; i++) {
+                nativeQuery.setParameter(i + 1, args[i]);
+            }
+        }
+        Object singleResult = nativeQuery.getSingleResult();
+        return getEntityType().cast(singleResult);
     }
 
     @Override
-    public List<E> listNativeQuery(String sql, Mapper<E> mapper, Object... args) {
-        throw new UnsupportedOperationException();
+    public List<E> listNativeQuery(String sql, String resultMapping, Object... args) {
+        Query nativeQuery = entityManager.createNativeQuery(sql, resultMapping);
+        if (args != null && args.length > 0) {
+            for (int i = 0; i < args.length; i++) {
+                nativeQuery.setParameter(i + 1, args[i]);
+            }
+        }
+        return nativeQuery.getResultList();
     }
 
     public void setEntityManager(EntityManager entityManager) {

@@ -73,8 +73,8 @@ public interface IBaseDao<I extends Serializable, E extends BaseEntity<I>, Q ext
     /**
      * 根据查询语句查询
      *
-     * @param jql   查询语句
-     * @param args  参数
+     * @param jql  查询语句
+     * @param args 参数
      * @return 查询结果集
      */
     List<E> listByQuery(String jql, Object... args);
@@ -82,8 +82,8 @@ public interface IBaseDao<I extends Serializable, E extends BaseEntity<I>, Q ext
     /**
      * 根据查询语句查询
      *
-     * @param jql   查询语句
-     * @param args  参数
+     * @param jql  查询语句
+     * @param args 参数
      * @return 查询结果对象
      */
     E loadByQuery(String jql, Object... args);
@@ -91,8 +91,8 @@ public interface IBaseDao<I extends Serializable, E extends BaseEntity<I>, Q ext
     /**
      * 根据原生查询语句查询
      *
-     * @param sql   查询原生语句
-     * @param args  参数
+     * @param sql  查询原生语句
+     * @param args 参数
      * @return 结果集
      */
     List<E> listByNativeQuery(String sql, Object... args);
@@ -100,8 +100,8 @@ public interface IBaseDao<I extends Serializable, E extends BaseEntity<I>, Q ext
     /**
      * 根据原生查询语句查询
      *
-     * @param sql   查询原生语句
-     * @param args  参数
+     * @param sql  查询原生语句
+     * @param args 参数
      * @return 结果集
      */
     E loadByNativeQuery(String sql, Object... args);
@@ -109,22 +109,22 @@ public interface IBaseDao<I extends Serializable, E extends BaseEntity<I>, Q ext
     /**
      * 根据原生查询语句查询
      *
-     * @param sql    查询原生语句
-     * @param mapper 映射器
-     * @param args   参数
+     * @param sql           查询原生语句
+     * @param resultMapping 映射器
+     * @param args          参数
      * @return 结果对象
      */
-    E loadNativeQuery(String sql, Mapper<E> mapper, Object... args);
+    E loadNativeQuery(String sql, String resultMapping, Object... args);
 
     /**
      * 根据原生查询语句查询
      *
-     * @param sql    查询原生语句
-     * @param mapper 映射器
-     * @param args   参数
+     * @param sql           查询原生语句
+     * @param resultMapping 映射器
+     * @param args          参数
      * @return 结果对集合
      */
-    List<E> listNativeQuery(String sql, Mapper<E> mapper, Object... args);
+    List<E> listNativeQuery(String sql, String resultMapping, Object... args);
 
     Class<E> getEntityType();
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/><!-- 添加数据源 -->
+        <property name="persistenceProviderClass"  value="org.apache.openjpa.persistence.PersistenceProviderImpl"/>
+        <property name="packagesToScan" value="com.calm.dao.it.entity"/>
+        <property name="loadTimeWeaver">
+            <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
+        </property>
+        <!--<property name="jpaVendorAdapter" value="org.apache.openjpa.persistence.OpenJPAPersistence"/>-->
+        <!-- hibernate 配置 -->
+        <property name="jpaProperties">
+            <props>
+                <prop key="openjpa.Log">DefaultLevel=TRACE, Runtime=TRACE, Tool=INFO, SQL=TRACE</prop>
+            </props>
+        </property>
+    </bean>
+
+</beans>

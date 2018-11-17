@@ -1,7 +1,9 @@
 package com.calm.dao.helper;
 
-import com.calm.dao.helper.condition.Condition;
-import com.calm.dao.helper.condition.filter.FilterCondition;
+import com.calm.dao.helper.condition.AbstractPropertyCondition;
+import com.calm.dao.helper.condition.FilterCondition;
+import com.calm.dao.helper.condition.PropertyCondition;
+import com.calm.dao.helper.condition.filter.AbstractFilterCondition;
 import com.calm.dao.helper.condition.filter.MatchType;
 import com.calm.dao.helper.entity.BaseEntity;
 
@@ -14,7 +16,7 @@ import java.util.List;
  * @param <I> id
  * @param <E> 实体
  */
-public interface Subquery<I, E extends Serializable> {
+public interface Subquery<I extends Serializable, E extends BaseEntity<I>> {
 
     /**
      * 多个or条件
@@ -39,17 +41,17 @@ public interface Subquery<I, E extends Serializable> {
      * @param value    过滤值
      * @return 查询器
      */
-    Query<I, E> andEq(String property, Object value);
+    Query<I, E> eq(String property, Object value);
 
     /**
      * 范围
      *
      * @param property 属性
      * @param start    开始值
-     * @param end    结束值
+     * @param end      结束值
      * @return 查询器
      */
-    Query<I, E> andBetween(String property, Comparable start,Comparable end);
+    Query<I, E> between(String property, Comparable start, Comparable end);
 
     /**
      * 存在
@@ -58,7 +60,7 @@ public interface Subquery<I, E extends Serializable> {
      * @param value    过滤值
      * @return 查询器
      */
-    Query<I, E> andIn(String property, Object[] value);
+    Query<I, E> in(String property, Object[] value);
 
     /**
      * 存在
@@ -67,7 +69,7 @@ public interface Subquery<I, E extends Serializable> {
      * @param value    过滤值
      * @return 查询器
      */
-    Query<I, E> andIn(String property, List<?> value);
+    Query<I, E> in(String property, List<?> value);
 
     /**
      * 大于等于
@@ -76,7 +78,7 @@ public interface Subquery<I, E extends Serializable> {
      * @param value    过滤值
      * @return 查询器
      */
-    Query<I, E> andGe(String property, Comparable<?> value);
+    Query<I, E> ge(String property, Comparable<?> value);
 
     /**
      * 大于
@@ -85,7 +87,7 @@ public interface Subquery<I, E extends Serializable> {
      * @param value    过滤值
      * @return 查询器
      */
-    Query<I, E> andGt(String property, Comparable<?> value);
+    Query<I, E> gt(String property, Comparable<?> value);
 
     /**
      * 小于
@@ -94,7 +96,7 @@ public interface Subquery<I, E extends Serializable> {
      * @param value    过滤值
      * @return 查询器
      */
-    Query<I, E> andLt(String property, Comparable<?> value);
+    Query<I, E> lt(String property, Comparable<?> value);
 
     /**
      * 小于等于
@@ -103,7 +105,7 @@ public interface Subquery<I, E extends Serializable> {
      * @param value    过滤值
      * @return 查询器
      */
-    Query<I, E> andLe(String property, Comparable<?> value);
+    Query<I, E> le(String property, Comparable<?> value);
 
     /**
      * 属性为空
@@ -111,7 +113,7 @@ public interface Subquery<I, E extends Serializable> {
      * @param property 属性
      * @return 查询器
      */
-    Query<I, E> andIsNull(String property);
+    Query<I, E> isNull(String property);
 
     /**
      * 属性非空
@@ -119,17 +121,17 @@ public interface Subquery<I, E extends Serializable> {
      * @param property 属性
      * @return 查询器
      */
-    Query<I, E> andNotNull(String property);
+    Query<I, E> notNull(String property);
 
     /**
      * 范围
      *
      * @param property 属性
      * @param start    开始值
-     * @param end    结束值
+     * @param end      结束值
      * @return 查询器
      */
-    Query<I, E> orBetween(String property, Comparable start,Comparable end);
+    Query<I, E> orBetween(String property, Comparable start, Comparable end);
 
 
     /**
@@ -139,7 +141,7 @@ public interface Subquery<I, E extends Serializable> {
      * @param value    过滤值
      * @return 查询器
      */
-    Query<I, E> andLike(String property, String value);
+    Query<I, E> like(String property, String value);
 
     /**
      * 根据匹配模式模糊匹配
@@ -149,7 +151,7 @@ public interface Subquery<I, E extends Serializable> {
      * @param matchType 匹配类型
      * @return 查询器
      */
-    Query<I, E> andLike(String property, String value, MatchType matchType);
+    Query<I, E> like(String property, String value, MatchType matchType);
 
     /**
      * 或者相等
@@ -244,7 +246,7 @@ public interface Subquery<I, E extends Serializable> {
      *
      * @return 排序集合
      */
-    List<Condition> getOrders();
+    List<PropertyCondition> getOrders();
 
     /**
      * 获得分组条件
@@ -260,27 +262,33 @@ public interface Subquery<I, E extends Serializable> {
      */
     Subquery<I, E> orIn(String property, Object[] value);
 
+    Query<I, E> orIn(String property, List<?> value);
+
     /**
      * @param property 属性
      * @param clazz    子查询器
-     * @param <A>     子查询ID
-     * @param <B>     子查询实体
+     * @param <A>      子查询ID
+     * @param <B>      子查询实体
      * @return 子查询
      */
     <A extends Serializable, B extends BaseEntity<A>> Subquery<A, B> createSubquery(String property, Class<B> clazz);
 
     /**
      * 非逻辑删除
+     *
      * @return 查询器
      */
-    Query<I, E> andNormal();
+    Query<I, E> normal();
 
     /**
      * 且不相等
+     *
      * @param property 属性
-     * @param value 值
+     * @param value    值
      * @return 查询器
      */
-    Query<I, E> andNe(String property, Object value);
+    Query<I, E> ne(String property, Object value);
+
+    Query<I, E> or();
 
 }

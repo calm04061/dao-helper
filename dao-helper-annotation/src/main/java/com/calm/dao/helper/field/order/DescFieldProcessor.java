@@ -1,6 +1,6 @@
 package com.calm.dao.helper.field.order;
 
-import com.calm.dao.helper.field.AbstractFieldProcessor;
+import com.calm.dao.helper.field.and.AbstractFieldProcessor;
 import com.calm.dao.helper.field.FieldProcessor;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.MethodSpec;
@@ -21,7 +21,6 @@ public class DescFieldProcessor extends AbstractFieldProcessor {
     }
 
     public void buildMethodBody(MethodSpec.Builder builder, VariableElement var, String name) {
-        nullReturn(builder, var, name);
         builder.addStatement("desc(\"$N\")", var.toString());
     }
 }

@@ -8,7 +8,7 @@ import com.calm.dao.helper.Subquery;
  * @author dingqihui
  *
  */
-public class SubqueryCondition extends FilterCondition {
+public class SubqueryCondition extends AbstractFilterCondition {
 	private Subquery<?, ?> query;
 
 	public SubqueryCondition(String property, Subquery<?, ?> query) {

@@ -1,69 +1,33 @@
 package com.calm.dao.it.entity;
 
-import com.calm.dao.helper.IBaseDao;
-import com.calm.dao.helper.Mapper;
+import com.calm.dao.helper.jpa.JpaDao;
+import com.calm.dao.helper.jpa.Operation2PredicateFinder;
 import com.calm.dao.it.query.UserQuery;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
-public class UserDao implements IBaseDao<String, User, UserQuery> {
+@Transactional
+@Repository
+public class UserDao extends JpaDao<Integer, User, UserQuery> {
+
     @Override
-    public User loadById(Class<User> clazz, String id) {
-        return null;
+    public UserQuery query() {
+        return new UserQuery(getEntityManager(), getEntityType(), getOperation2PredicateFinder());
     }
 
+    @Resource
     @Override
-    public User insert(User entity) {
-        return null;
+    public void setOperation2PredicateFinder(Operation2PredicateFinder operation2PredicateFinder) {
+        super.setOperation2PredicateFinder(operation2PredicateFinder);
     }
 
+    @PersistenceContext
     @Override
-    public User update(User entity) {
-        return null;
-    }
-
-    @Override
-    public void delete(User... entities) {
-
-    }
-
-    @Override
-    public void delete(List<User> entity) {
-
-    }
-
-    @Override
-    public UserQuery query(Class<User> clazz) {
-        return null;
-    }
-
-    @Override
-    public List<User> listByQuery(String jql, Class<User> clazz, Object... args) {
-        return null;
-    }
-
-    @Override
-    public User loadByQuery(String jql, Class<User> clazz, Object... args) {
-        return null;
-    }
-
-    @Override
-    public List<User> listByNativeQuery(String sql, Class<User> clazz, Object... args) {
-        return null;
-    }
-
-    @Override
-    public User loadByNativeQuery(String sql, Class<User> clazz, Object... args) {
-        return null;
-    }
-
-    @Override
-    public User loadNativeQuery(String sql, Mapper<User> mapper, Class<User> clazz, Object... args) {
-        return null;
-    }
-
-    @Override
-    public List<User> listNativeQuery(String sql, Mapper<User> mapper, Class<User> clazz, Object... args) {
-        return null;
+    public void setEntityManager(EntityManager entityManager) {
+        super.setEntityManager(entityManager);
     }
 }

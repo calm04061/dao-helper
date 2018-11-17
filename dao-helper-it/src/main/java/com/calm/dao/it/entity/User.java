@@ -1,19 +1,25 @@
 package com.calm.dao.it.entity;
 
+import com.calm.dao.helper.PersistenceFramework;
 import com.calm.dao.helper.annotation.Helper;
 import com.calm.dao.helper.entity.BaseEntity;
-import com.calm.dao.it.AbstractHelperQuery;
 
-@Helper(queryParent = AbstractHelperQuery.class, packageName = "com.calm.dao.it.query")
-public class User implements BaseEntity<String> {
-    private String id;
+import javax.persistence.*;
+
+@Entity
+@Helper(framework = PersistenceFramework.JPA, packageName = "com.calm.dao.it.query")
+public class User implements BaseEntity<Integer> {
+    @Id
+    @TableGenerator(name = "user", table = "sequence", pkColumnName = "key", valueColumnName = "value")
+    @GeneratedValue(generator = "user")
+    private Integer id;
     private int age;
-
-    public String getId() {
+    private String name;
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -38,5 +44,13 @@ public class User implements BaseEntity<String> {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

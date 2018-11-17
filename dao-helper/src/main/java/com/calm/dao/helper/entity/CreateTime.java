@@ -1,9 +1,10 @@
 package com.calm.dao.helper.entity;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 public interface CreateTime {
-    Timestamp getCreateTime();
+    String PROPERTY_NAME = "createTime";
+    Date getCreateTime();
 
-    void setCreateTime(Timestamp createTime);
+    void setCreateTime(Date createTime);
 }

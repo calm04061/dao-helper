@@ -1,6 +1,6 @@
 package com.calm.dao.helper.condition.filter;
 
-public class ValueFilterCondition<T> extends FilterCondition {
+public class ValueFilterCondition<T> extends AbstractFilterCondition {
 	private T item;
 
 	public ValueFilterCondition(FilterType type, String property, T item) {

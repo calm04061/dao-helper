@@ -7,32 +7,6 @@
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     <jdbc:embedded-database id="dataSource" type="H2"/>
     <context:component-scan base-package="com.calm.dao.it.entity"/>
-    <bean id="entityManagerFactory"
-          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="dataSource" ref="dataSource"/><!-- 添加数据源 -->
-        <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
-        </property>
-        <property name="packagesToScan" value="com.calm.dao.it.entity"/>
-        <!-- hibernate 配置 -->
-        <property name="jpaProperties">
-            <props>
-                <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
-                <prop key="hibernate.hbm2ddl.auto">update</prop>
-                <prop key="hibernate.show_sql">true</prop>
-                <prop key="hibernate.format_sql">true</prop>
-                <!-- 方言 hibernate 并不知道自己要使用哪种数据库 -->
-                <prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
-                <!--
-            <prop key="hibernate.cache.use_second_level_cache">true</prop>
-            <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
-            <prop key="hibernate.cache.use_query_cache">true</prop>
-            -->
-            </props>
-        </property>
-        <!--  <property name="sharedCacheMode" value="ENABLE_SELECTIVE"></property>-->
-    </bean>
-
     <!-- 配置事务 纯事物     jpa事物 -->
     <bean id="transactionManager"
           class="org.springframework.orm.jpa.JpaTransactionManager">

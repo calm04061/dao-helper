@@ -15,8 +15,10 @@ public class OrMethodProcessor implements MethodProcessor {
     @Override
     public MethodSpec.Builder buildMethod(ClassName superClassName, ClassName queryClassName) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("or");
-
-        builder.addStatement("return this");
+//        return new UserQuery(this, getEntityType(), getOperation2PredicateFinder());
+        builder.addStatement("$T $N = new $T($N,$N,$N)", queryClassName, "query", queryClassName, "this", "getEntityType()", "getOperation2PredicateFinder()");
+        builder.addStatement("orQuery($N)", "query");
+        builder.addStatement("return $N", "query");
         builder.returns(queryClassName);
         return builder;
     }

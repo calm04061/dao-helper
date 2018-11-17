@@ -1,7 +1,9 @@
 package com.calm.dao.helper;
 
-import com.calm.dao.helper.condition.Condition;
-import com.calm.dao.helper.condition.filter.FilterCondition;
+import com.calm.dao.helper.condition.AbstractPropertyCondition;
+import com.calm.dao.helper.condition.FilterCondition;
+import com.calm.dao.helper.condition.PropertyCondition;
+import com.calm.dao.helper.condition.filter.AbstractFilterCondition;
 import com.calm.dao.helper.condition.filter.MatchType;
 import com.calm.dao.helper.entity.BaseEntity;
 
@@ -244,7 +246,7 @@ public interface Subquery<I extends Serializable, E extends BaseEntity<I>> {
      *
      * @return 排序集合
      */
-    List<Condition> getOrders();
+    List<PropertyCondition> getOrders();
 
     /**
      * 获得分组条件

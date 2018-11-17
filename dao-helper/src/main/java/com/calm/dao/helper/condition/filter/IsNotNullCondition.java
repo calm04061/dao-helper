@@ -5,7 +5,7 @@ package com.calm.dao.helper.condition.filter;
  * @author dingqihui
  *
  */
-public class IsNotNullCondition extends FilterCondition {
+public class IsNotNullCondition extends AbstractFilterCondition {
 
 	public IsNotNullCondition(FilterType type,String property) {
 		super(type,property);

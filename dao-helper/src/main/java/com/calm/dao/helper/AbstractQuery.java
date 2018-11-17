@@ -1,10 +1,7 @@
 package com.calm.dao.helper;
 
-import com.calm.dao.helper.condition.AscCondition;
-import com.calm.dao.helper.condition.Condition;
-import com.calm.dao.helper.condition.Conditions;
-import com.calm.dao.helper.condition.DescCondition;
-import com.calm.dao.helper.condition.filter.FilterCondition;
+import com.calm.dao.helper.condition.*;
+import com.calm.dao.helper.condition.filter.AbstractFilterCondition;
 import com.calm.dao.helper.condition.filter.FilterType;
 import com.calm.dao.helper.condition.filter.InCondition;
 import com.calm.dao.helper.condition.filter.MatchType;
@@ -23,7 +20,7 @@ public abstract class AbstractQuery<I extends Serializable, E extends BaseEntity
     public static final Logger LOGGER = LoggerFactory.getLogger(AbstractQuery.class);
     private List<FilterCondition> conditions = new ArrayList<>();
 
-    private List<Condition> orders = new ArrayList<>();
+    private List<PropertyCondition> orders = new ArrayList<>();
 
     private List<String> groups = new ArrayList<>();
 
@@ -348,7 +345,7 @@ public abstract class AbstractQuery<I extends Serializable, E extends BaseEntity
      * @see com.aixuexi.common.dao.ObjectQuery#getOrders()
      */
     @Override
-    public List<Condition> getOrders() {
+    public List<PropertyCondition> getOrders() {
         return orders;
     }
 

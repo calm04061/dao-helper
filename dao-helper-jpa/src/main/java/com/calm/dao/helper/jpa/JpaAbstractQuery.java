@@ -3,9 +3,7 @@ package com.calm.dao.helper.jpa;
 import com.calm.dao.helper.AbstractQuery;
 import com.calm.dao.helper.Query;
 import com.calm.dao.helper.Subquery;
-import com.calm.dao.helper.condition.AscCondition;
-import com.calm.dao.helper.condition.Condition;
-import com.calm.dao.helper.condition.DescCondition;
+import com.calm.dao.helper.condition.*;
 import com.calm.dao.helper.condition.filter.*;
 import com.calm.dao.helper.entity.BaseEntity;
 import com.calm.dao.helper.entity.DefaultPaging;
@@ -22,7 +20,7 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
     private EntityManager entityManager;
     private Class<E> entityType;
     private Operation2PredicateFinder operation2PredicateFinder;
-    private Subquery<I, E> parent;
+    private Query<I, E> parent;
 
     public JpaAbstractQuery(EntityManager entityManager, Class<E> entityType, Operation2PredicateFinder operation2PredicateFinder) {
         this.entityManager = entityManager;
@@ -30,7 +28,7 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
         this.operation2PredicateFinder = operation2PredicateFinder;
     }
 
-    public JpaAbstractQuery(Subquery<I, E> parent, Class<E> entityType, Operation2PredicateFinder operation2PredicateFinder) {
+    public JpaAbstractQuery(Query<I, E> parent, Class<E> entityType, Operation2PredicateFinder operation2PredicateFinder) {
         this.entityType = entityType;
         this.operation2PredicateFinder = operation2PredicateFinder;
         this.parent = parent;
@@ -106,6 +104,9 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
 
     @Override
     public E load() {
+        if (parent != null) {
+            return parent.load();
+        }
         Map<String, PathMap> pathMap = new HashMap<>();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<E> createQuery = criteriaBuilder.createQuery(entityType);
@@ -137,9 +138,9 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
      */
     protected List<Order> getOrder(Query<?, ?> item, Root<E> root, Map<String, PathMap> pathMap, CriteriaBuilder criteriaBuilder) {
         List<Order> predicates = new ArrayList<>();
-        List<Condition> conditions2 = item.getOrders();
+        List<PropertyCondition> conditions = item.getOrders();
 
-        for (Condition con : conditions2) {
+        for (PropertyCondition con : conditions) {
             String property = con.getProperty();
             Path<Object> predicate = getPath(root, property, pathMap);
             Order order = null;
@@ -199,58 +200,75 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
     protected Predicate[] getPredicate(Query<?, ?> item, Root<E> from, Map<String, PathMap> pathMap, CriteriaQuery<?> countQuery, CriteriaBuilder criteriaBuilder) {
         List<FilterCondition> conditions2 = item.getConditions();
         Predicate predicateResult;
-        Predicate predicate = null;
         List<Predicate> predicates = new ArrayList<>();
         FilterType preType = FilterType.AND;
+        Predicate predicate = null;
         for (FilterCondition con : conditions2) {
-            String property = con.getProperty();
-            if (con instanceof SimpleCondition) {
-                OperationItem<?> item2 = ((SimpleCondition) con).getItem();
-                predicate = operation2Predicate(property, item2, from, pathMap, criteriaBuilder);
+            if (con instanceof PropertyCondition) {
+                String property = ((PropertyCondition) con).getProperty();
+                if (con instanceof SimpleCondition) {
+                    OperationItem<?> item2 = ((SimpleCondition) con).getItem();
+                    predicate = operation2Predicate(property, item2, from, pathMap, criteriaBuilder);
 
-            } else if (con instanceof IsNullCondition) {
-                Path<Object> path = getPath(from, property, pathMap);
-                predicate = criteriaBuilder.isNull(path);
+                } else if (con instanceof IsNullCondition) {
+                    Path<Object> path = getPath(from, property, pathMap);
+                    predicate = criteriaBuilder.isNull(path);
 
-            } else if (con instanceof IsNotNullCondition) {
-                Path<Object> path = getPath(from, property, pathMap);
-                predicate = criteriaBuilder.isNotNull(path);
+                } else if (con instanceof IsNotNullCondition) {
+                    Path<Object> path = getPath(from, property, pathMap);
+                    predicate = criteriaBuilder.isNotNull(path);
 
-            } else if (con instanceof InCondition) {
-                Path<Object> path = getPath(from, property, pathMap);
-                CriteriaBuilder.In<Object> in = criteriaBuilder.in(path);
-                Object[] item2 = ((InCondition) con).getItem();
-                for (Object o : item2) {
-                    in.value(o);
+                } else if (con instanceof InCondition) {
+                    Path<Object> path = getPath(from, property, pathMap);
+                    CriteriaBuilder.In<Object> in = criteriaBuilder.in(path);
+                    Object[] item2 = ((InCondition) con).getItem();
+                    for (Object o : item2) {
+                        in.value(o);
+                    }
+                    predicate = in;
+                } else if (con instanceof ListCondition) {
+                    Query<?, ?> item2 = ((ListCondition) con).getItem();
+                    Predicate[] predicateTemp = getPredicate(item2, from, pathMap, countQuery, criteriaBuilder);
+                    predicate = criteriaBuilder.and(predicateTemp);
                 }
-                predicate = in;
-            } else if (con instanceof ListCondition) {
-                Query<?, ?> item2 = ((ListCondition) con).getItem();
-                Predicate[] predicateTemp = getPredicate(item2, from, pathMap, countQuery, criteriaBuilder);
-                predicate = criteriaBuilder.and(predicateTemp);
-            }
-            FilterType type = con.getType();
-            if (type == preType) {
-                if (type == FilterType.AND) {
-                    predicateResult = criteriaBuilder.and(predicate);
+                FilterType type = con.getType();
+                if (type == preType) {
+                    if (type == FilterType.AND) {
+                        predicateResult = criteriaBuilder.and(predicate);
+                    } else {
+                        predicateResult = criteriaBuilder.or(predicate);
+                    }
+                    predicates.add(predicateResult);
                 } else {
-                    predicateResult = criteriaBuilder.or(predicate);
+                    Predicate[] array = predicates.toArray(new Predicate[]{});
+                    Predicate temp;
+                    if (preType == FilterType.AND) {
+                        predicateResult = criteriaBuilder.and(array);
+                        temp = criteriaBuilder.or(predicateResult, predicate);
+                    } else {
+                        predicateResult = criteriaBuilder.or(array);
+                        temp = criteriaBuilder.and(predicateResult, predicate);
+                    }
+                    preType = type;
+                    predicates.clear();
+                    predicates.add(temp);
                 }
-                predicates.add(predicateResult);
-            } else {
-                Predicate[] array = predicates.toArray(new Predicate[]{});
-                Predicate temp;
-                if (preType == FilterType.AND) {
-                    predicateResult = criteriaBuilder.and(array);
-                    temp = criteriaBuilder.or(predicateResult, predicate);
+            } else if (con instanceof OrCondition) {
+                Query query = ((OrCondition) con).getQuery();
+                Predicate[] predicate1 = getPredicate(query, from, pathMap, countQuery, criteriaBuilder);
+
+                if (predicate == null) {
+                    predicateResult = criteriaBuilder.and(predicate1);
+                    predicates.add(predicateResult);
                 } else {
-                    predicateResult = criteriaBuilder.or(array);
-                    temp = criteriaBuilder.and(predicateResult, predicate);
+                    Predicate and = criteriaBuilder.and(predicate1);
+                    predicateResult = criteriaBuilder.or(predicate, and);
+                    predicates.clear();
+                    predicates.add(predicateResult);
                 }
-                preType = type;
-                predicates.clear();
-                predicates.add(temp);
+                preType = con.getType();
             }
+
         }
         return predicates.toArray(new Predicate[]{});
     }
@@ -289,6 +307,10 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
 
     }
 
+    protected void orQuery(Query<I, E> query) {
+        getConditions().add(new OrCondition<>(query));
+    }
+
     protected List<Expression<?>> getGroups(Query<?, ?> item, Root<E> root, Map<String, PathMap> pathMap) {
         List<Expression<?>> result = new ArrayList<>();
         List<String> groups = getGroups();
@@ -298,4 +320,11 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
         return result;
     }
 
+    protected Class<E> getEntityType() {
+        return entityType;
+    }
+
+    public Operation2PredicateFinder getOperation2PredicateFinder() {
+        return operation2PredicateFinder;
+    }
 }

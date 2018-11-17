@@ -6,6 +6,19 @@ import com.calm.dao.helper.entity.BaseEntity;
 
 import javax.persistence.*;
 
+@SqlResultSetMappings({
+        @SqlResultSetMapping(
+                name = "user",
+                entities = {@EntityResult(entityClass = User.class, //就是当前这个类的名字
+                        fields = {
+                                @FieldResult(name = "id", column = "id"),
+                                @FieldResult(name = "name", column = "name"),
+                                @FieldResult(name = "age", column = "age"),
+                        }
+                )
+                }
+        )
+})
 @Entity
 @Helper(framework = PersistenceFramework.JPA, packageName = "com.calm.dao.it.query")
 public class User implements BaseEntity<Integer> {
@@ -15,6 +28,7 @@ public class User implements BaseEntity<Integer> {
     private Integer id;
     private int age;
     private String name;
+
     public Integer getId() {
         return id;
     }

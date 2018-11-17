@@ -1,5 +1,6 @@
 package com.calm.dao.helper.jpa;
 
+import com.calm.dao.helper.Mapper;
 import com.calm.dao.it.entity.User;
 import com.calm.dao.it.entity.UserDao;
 import com.calm.dao.it.query.UserQuery;
@@ -10,6 +11,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -50,5 +54,28 @@ public class UserDaoTest {
         or.idEq(1).ageGe(3);
         User load = or.load();
         System.out.println(load);
+    }
+
+    @Test
+    public void testNativeQueryOr() {
+        List<User> query = userDao.listByNativeQuery("select * from user");
+        assertNotNull(query);
+    }
+
+    @Test
+    public void testNativeQuery() {
+        List<User> query = userDao.listByNativeQuery("select * from user where id =?", 1);
+        assertNotNull(query);
+    }
+
+    @Test
+    public void testLoadNativeQuery() {
+        User query = userDao.loadByNativeQuery("select * from user where id =?", 1);
+        assertNotNull(query);
+    }
+    @Test
+    public void testLoadNativeQueryMapper() {
+        User query = userDao.loadNativeQuery("select id,age,name from user where id =?", "user", 1);
+        assertNotNull(query);
     }
 }

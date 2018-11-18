@@ -5,10 +5,10 @@
     <parent>
         <artifactId>dao-helper-parent</artifactId>
         <groupId>com.calm</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0-bundle-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
+    <packaging>jar</packaging>
     <artifactId>dao-helper-jpa</artifactId>
     <dependencies>
         <dependency>
@@ -31,6 +31,7 @@
             <artifactId>dao-helper-annotation</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.google.auto.service</groupId>
@@ -39,4 +40,45 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>bundle-manifest</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <instructions>
+                        <Import-Package>
+                            *
+                        </Import-Package>
+
+                        <Export-Package>
+                            com.calm.dao.helper.jpa.*
+                        </Export-Package>
+                    </instructions>
+                    <supportedProjectTypes>
+                        <supportedProjectType>jar</supportedProjectType>
+                    </supportedProjectTypes>
+                </configuration>
+            </plugin>
+            <!-- bundle 插件不会复制META-INF/services文件夹需要jar-plugin支持-->
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

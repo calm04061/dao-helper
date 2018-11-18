@@ -99,7 +99,7 @@ public class EntityProcessor extends AbstractProcessor {
     }
 
     private void methodProcessor(TypeSpec.Builder typeBuilder, ClassName superClassName, ClassName queryClassName) {
-        ServiceLoader<MethodProcessor> load = ServiceLoader.load(MethodProcessor.class, EntityProcessor.class.getClassLoader());
+        ServiceLoader<MethodProcessor> load = ServiceLoader.load(MethodProcessor.class, MethodProcessor.class.getClassLoader());
         for (MethodProcessor next : load) {
             if (next.isSupport(superClassName)) {
                 MethodSpec.Builder builder = next.buildMethod(superClassName, queryClassName);

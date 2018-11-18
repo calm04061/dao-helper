@@ -11,5 +11,5 @@ branches:
   - tags
 jdk:
   - oraclejdk8
-install:
-  - mvn clean source:jar deploy -Dmaven.test.skip -Dgithub-token=${api_token} -Pgithub
+script:
+- mvn clean source:jar deploy -Dmaven.test.skip -Dgithub-token=${api_token} -Pgithub

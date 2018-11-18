@@ -11,6 +11,7 @@ branches:
   - tags
 jdk:
   - oraclejdk8
+script: false
 deploy:
   script: mvn clean source:jar deploy -Dmaven.test.skip -Dgithub-token=${api_token} -Pgithub
   provider: script

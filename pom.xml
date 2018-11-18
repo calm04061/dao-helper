@@ -96,6 +96,9 @@
                 <version>1.9.0</version>
                 <configuration>
                     <skipTestProject>true</skipTestProject>
+                    <gitFlowConfig>
+                        <versionTagPrefix>v</versionTagPrefix>
+                    </gitFlowConfig>
                 </configuration>
             </plugin>
             <plugin>

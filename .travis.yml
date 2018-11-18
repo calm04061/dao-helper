@@ -3,16 +3,18 @@ language: java
 cache:
   directories:
   - $HOME/.m2/repository/
-# 仓库的分支
-branches:
-  only:
-  - develop
 jdk:
   - oraclejdk8
 script:
-- mvn clean source:jar deploy -Dmaven.test.skip -Dgithub-token=${api_token} -Pgithub
+- mvn clean
 deploy:
-  script: mvn clean source:jar deploy -Dmaven.test.skip -Dgithub-token=${api_token} -Pgithub
-  provider: script
-  on:
-    tags: true
+# deploy develop to the staging environment
+  - provider: script
+    script: mvn clean source:jar deploy -Dmaven.test.skip -Dgithub-token=${api_token} -Pgithub
+    on:
+      tags: true
+    # deploy master to production
+  - provider: script
+    script: mvn clean source:jar deploy -Dmaven.test.skip -Dgithub-token=${api_token} -Pgithub
+    on:
+      branch: develop

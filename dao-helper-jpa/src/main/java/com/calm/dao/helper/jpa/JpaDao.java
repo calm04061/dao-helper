@@ -6,7 +6,6 @@ import com.calm.dao.helper.entity.BaseEntity;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collections;
@@ -29,21 +28,18 @@ public abstract class JpaDao<I extends Serializable, E extends BaseEntity<I>, Q 
     }
 
     @Override
-    @Transactional
     public E insert(E entity) {
         entityManager.persist(entity);
         return entity;
     }
 
     @Override
-    @Transactional
     public E update(E entity) {
         return entityManager.merge(entity);
     }
 
 
     @Override
-    @Transactional
     public void delete(List<E> entities) {
         for (E e : entities) {
             entityManager.remove(e);
@@ -137,14 +133,12 @@ public abstract class JpaDao<I extends Serializable, E extends BaseEntity<I>, Q 
     }
 
     @Override
-    @Transactional
     public void deleteById(I id) {
         E e = loadById(id);
         delete(Collections.singletonList(e));
     }
 
     @Override
-    @Transactional
     public void saveAll(List<E> entity) {
         for (E e : entity) {
             I id = e.getId();

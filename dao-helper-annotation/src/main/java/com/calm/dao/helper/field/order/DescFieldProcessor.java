@@ -16,6 +16,15 @@ public class DescFieldProcessor extends AbstractFieldProcessor {
     }
 
     @Override
+    public MethodSpec.Builder buildMethod(VariableElement var) {
+        String name = var.getSimpleName().toString();
+        MethodSpec.Builder builder = MethodSpec.methodBuilder(name + option());
+        buildMethodBody(builder, var, name);
+        builder.addStatement("return this");
+        return builder;
+    }
+
+    @Override
     public String option() {
         return "Desc";
     }

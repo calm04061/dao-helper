@@ -4,13 +4,11 @@ import com.calm.dao.helper.jpa.JpaDao;
 import com.calm.dao.helper.jpa.Operation2PredicateFinder;
 import com.calm.dao.it.query.UserQuery;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-@Transactional
 @Repository
 public class UserDao extends JpaDao<Integer, User, UserQuery> {
 

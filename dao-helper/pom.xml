@@ -38,7 +38,7 @@
                         </Import-Package>
 
                         <Export-Package>
-                            *
+                            com.calm.dao.helper.*
                         </Export-Package>
                     </instructions>
                 </configuration>

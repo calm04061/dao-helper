@@ -1,4 +1,3 @@
-# 测试
 sudo: required
 language: java
 cache:
@@ -11,8 +10,6 @@ branches:
   - feature/*
   - tags
 jdk:
-- oraclejdk8
+  - oraclejdk8
 install:
-- mvn clean source:jar deploy -Dmaven.test.skip -Dgithub-token=${api_token} -Pgithub
-script:
-- ls
+  - mvn clean source:jar deploy -Dmaven.test.skip -Dgithub-token=${api_token} -Pgithub

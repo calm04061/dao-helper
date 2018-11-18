@@ -1,7 +1,8 @@
 package com.calm.dao.helper.processing;
 
+import com.calm.dao.helper.PersistenceFramework;
 import com.calm.dao.helper.annotation.Helper;
-import com.calm.dao.helper.constructor.ConstructorProcessor;
+import com.calm.dao.helper.method.MethodProcessor;
 import com.calm.dao.helper.field.FieldProcessor;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.*;
@@ -49,13 +50,13 @@ public class EntityProcessor extends AbstractProcessor {
                 ClassName idClassName = ClassName.bestGuess(findIdType(typeElement));
                 ClassName entityClassName = ClassName.bestGuess(typeElement.getQualifiedName().toString());
                 HelperInfo helperInfo = load(typeElement, elementPackage);
-                ClassName superClassName = ClassName.bestGuess(helperInfo.getParentClassName());
+                ClassName superClassName = ClassName.bestGuess(helperInfo.getPersistenceFramework().getQueryParent());
                 String packageName = helperInfo.getPackageName();
                 ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(superClassName, idClassName, entityClassName);
                 queryBuilder.superclass(parameterizedTypeName);
                 ClassName dao = ClassName.get(packageName, queryClassName);
 
-                constructorProcess(queryBuilder, superClassName);
+                methodProcessor(queryBuilder, superClassName, dao);
                 fieldProcess(typeElement, queryBuilder, dao);
                 JavaFile.Builder builder = JavaFile.builder(packageName, queryBuilder.build());
                 builder.build().writeTo(mFiler);
@@ -97,15 +98,13 @@ public class EntityProcessor extends AbstractProcessor {
         });
     }
 
-    private void constructorProcess(TypeSpec.Builder test, ClassName superClassName) {
-        ServiceLoader<ConstructorProcessor> load = ServiceLoader.load(ConstructorProcessor.class, ConstructorProcessor.class.getClassLoader());
-        Iterator<ConstructorProcessor> iterator = load.iterator();
-        while (iterator.hasNext()) {
-            ConstructorProcessor next = iterator.next();
+    private void methodProcessor(TypeSpec.Builder typeBuilder, ClassName superClassName, ClassName queryClassName) {
+        ServiceLoader<MethodProcessor> load = ServiceLoader.load(MethodProcessor.class, MethodProcessor.class.getClassLoader());
+        for (MethodProcessor next : load) {
             if (next.isSupport(superClassName)) {
-                MethodSpec.Builder builder = next.buildMethod(superClassName);
+                MethodSpec.Builder builder = next.buildMethod(superClassName, queryClassName);
                 builder.addModifiers(Modifier.PUBLIC);
-                test.addMethod(builder.build());
+                typeBuilder.addMethod(builder.build());
             }
         }
     }
@@ -114,7 +113,8 @@ public class EntityProcessor extends AbstractProcessor {
         List<? extends TypeMirror> typeParameters = typeElement.getInterfaces();
         for (TypeMirror typeMirror : typeParameters) {
             DeclaredType declaredType = (DeclaredType) typeMirror;
-            if (declaredType.asElement().toString().equals("com.calm.dao.helper.entity.BaseEntity")) {
+            String type = declaredType.asElement().toString();
+            if (type.equals("com.calm.dao.helper.entity.BaseEntity") || type.equals("com.calm.dao.helper.entity.AbstractTreeEntity")) {
                 DeclaredType argsType = (DeclaredType) typeMirror;
                 List<? extends TypeMirror> typeArguments = argsType.getTypeArguments();
                 for (TypeMirror idType : typeArguments) {
@@ -138,8 +138,8 @@ public class EntityProcessor extends AbstractProcessor {
 
                 elementValues.forEach((key, value) -> {
                     String attr = key.getSimpleName().toString();
-                    if (attr.equals("queryParent")) {
-                        helperInfo.setParentClassName(value.getValue().toString());
+                    if (attr.equals("framework")) {
+                        helperInfo.setPersistenceFramework(PersistenceFramework.valueOf(value.getValue().toString()));
                     } else if (attr.equals("packageName")) {
                         helperInfo.setPackageName(value.getValue().toString());
                     }

@@ -7,7 +7,7 @@
     <groupId>com.calm</groupId>
     <artifactId>dao-helper-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.0.0</version>
     <properties>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -17,6 +17,7 @@
         <module>dao-helper-annotation</module>
         <module>dao-helper-it</module>
         <module>dao-helper</module>
+        <module>dao-helper-jpa</module>
     </modules>
     <repositories>
         <repository>
@@ -28,50 +29,89 @@
             </snapshots>
         </repository>
     </repositories>
+
     <distributionManagement>
         <repository>
-            <id>github</id>
-            <url>file:///${user.home}/.m2/project</url>
+            <id>nexus</id>
+            <url>http://nexus.calm.com/repository/maven-releases/</url>
         </repository>
+        <snapshotRepository>
+            <id>nexus</id>
+            <url>http://nexus.calm.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
     </distributionManagement>
+    <profiles>
+        <profile>
+            <id>github</id>
+            <distributionManagement>
+                <repository>
+                    <id>github</id>
+                    <url>file:///${project.build.directory}/repo</url>
+                </repository>
+                <snapshotRepository>
+                    <id>nexus</id>
+                    <url>file:///${project.build.directory}/repo</url>
+                </snapshotRepository>
+            </distributionManagement>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.github</groupId>
+                        <artifactId>site-maven-plugin</artifactId>
+                        <version>0.12</version>
+                        <configuration>
+                            <message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
+                            <noJekyll>false</noJekyll>                                  <!-- disable webpage processing -->
+                            <outputDirectory>${project.build.directory}/repo</outputDirectory> <!-- matches distribution management repository url above -->
+                            <branch>refs/heads/master</branch>                       <!-- remote branch name -->
+                            <includes>
+                                <include>**/*</include>
+                            </includes>
+                            <repositoryName>maven</repositoryName>      <!-- github repo name -->
+                            <repositoryOwner>calm04061</repositoryOwner>    <!-- github username  -->
+                            <userName>calm0406@163.com</userName>
+                            <oauth2Token>${github-token}</oauth2Token>
+                            <merge>true</merge>
+                        </configuration>
+                        <executions>
+                            <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
+                            <execution>
+                                <goals>
+                                    <goal>site</goal>
+                                </goals>
+                                <phase>deploy</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <build>
         <plugins>
-            <plugin>
-                <groupId>com.github.github</groupId>
-                <artifactId>site-maven-plugin</artifactId>
-                <version>0.12</version>
-                <configuration>
-                    <message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
-                    <noJekyll>false</noJekyll>                                  <!-- disable webpage processing -->
-                    <outputDirectory>${user.home}/.m2/project</outputDirectory> <!-- matches distribution management repository url above -->
-                    <branch>refs/heads/master</branch>                       <!-- remote branch name -->
-                    <includes>
-                        <include>**/*</include>
-                    </includes>
-                    <repositoryName>maven</repositoryName>      <!-- github repo name -->
-                    <repositoryOwner>calm04061</repositoryOwner>    <!-- github username  -->
-                    <userName>calm0406@163.com</userName>
-                    <oauth2Token>${github-token}</oauth2Token>
-                    <merge>true</merge>
-                </configuration>
-                <executions>
-                    <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
-                    <execution>
-                        <goals>
-                            <goal>site</goal>
-                        </goals>
-                        <phase>deploy</phase>
-                    </execution>
-                </executions>
-            </plugin>
+
             <plugin>
                 <groupId>com.amashchenko.maven.plugin</groupId>
                 <artifactId>gitflow-maven-plugin</artifactId>
                 <version>1.9.0</version>
                 <configuration>
-                    <pushRemote>true</pushRemote>
                     <skipTestProject>true</skipTestProject>
+                    <gitFlowConfig>
+                        <versionTagPrefix>v</versionTagPrefix>
+                    </gitFlowConfig>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -1,13 +1,13 @@
 package com.calm.dao.helper;
 
-import com.calm.dao.helper.condition.AscCondition;
-import com.calm.dao.helper.condition.Condition;
-import com.calm.dao.helper.condition.Conditions;
-import com.calm.dao.helper.condition.DescCondition;
-import com.calm.dao.helper.condition.filter.FilterCondition;
+import com.calm.dao.helper.condition.*;
+import com.calm.dao.helper.condition.filter.AbstractFilterCondition;
 import com.calm.dao.helper.condition.filter.FilterType;
 import com.calm.dao.helper.condition.filter.InCondition;
 import com.calm.dao.helper.condition.filter.MatchType;
+import com.calm.dao.helper.entity.BaseEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,23 +16,21 @@ import java.util.List;
 import static com.calm.dao.helper.condition.filter.FilterType.AND;
 import static com.calm.dao.helper.condition.filter.FilterType.OR;
 
-public abstract class AbstractQuery<I, E extends Serializable> implements Query<I, E> {
-
+public abstract class AbstractQuery<I extends Serializable, E extends BaseEntity<I>> implements Query<I, E> {
+    public static final Logger LOGGER = LoggerFactory.getLogger(AbstractQuery.class);
     private List<FilterCondition> conditions = new ArrayList<>();
 
-    private List<Condition> orders = new ArrayList<>();
+    private List<PropertyCondition> orders = new ArrayList<>();
 
     private List<String> groups = new ArrayList<>();
 
     /* (non-Javadoc)
-     * @see com.calm.framework.common.dao.ObjectQuery#andEq(java.lang.String, java.lang.Object)
+     * @see com.calm.framework.common.dao.ObjectQuery#eq(java.lang.String, java.lang.Object)
      */
     @Override
-    public Query<I, E> andEq(String property, Object value) {
-        if (value == null) {
-            return this;
-        }
-        if (isEmptyString(value)) {
+    public Query<I, E> eq(String property, Object value) {
+        if (isBlankString(value)) {
+            LOGGER.info(" value is empty,be ignored");
             return this;
         }
         conditions.add(Conditions.eq(AND, property, value));
@@ -44,10 +42,8 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
      */
     @Override
     public Query<I, E> orEq(String property, Object value) {
-        if (value == null) {
-            return this;
-        }
-        if (isEmptyString(value)) {
+        if (isBlankString(value)) {
+            LOGGER.info(" value is empty,be ignored");
             return this;
         }
         conditions.add(Conditions.eq(OR, property, value));
@@ -56,14 +52,12 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
 
 
     /* (non-Javadoc)
-     * @see com.aixuexi.common.dao.ObjectQuery#andLike(java.lang.String, java.lang.String)
+     * @see com.aixuexi.common.dao.ObjectQuery#like(java.lang.String, java.lang.String)
      */
     @Override
-    public Query<I, E> andLike(String property, String value) {
-        if (value == null) {
-            return this;
-        }
-        if ((value).trim().length() == 0) {
+    public Query<I, E> like(String property, String value) {
+        if (isBlankString(value)) {
+            LOGGER.info(" value is empty,be ignored");
             return this;
         }
         conditions.add(Conditions.like(AND, property, "%" + value + "%"));
@@ -71,14 +65,12 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
     }
 
     /* (non-Javadoc)
-     * @see com.aixuexi.common.dao.ObjectQuery#andLike(java.lang.String, java.lang.String, com.aixuexi.common.condition.MatchType)
+     * @see com.aixuexi.common.dao.ObjectQuery#like(java.lang.String, java.lang.String, com.aixuexi.common.condition.MatchType)
      */
     @Override
-    public Query<I, E> andLike(String property, String value, MatchType matchType) {
-        if (value == null) {
-            return this;
-        }
-        if ((value).trim().length() == 0) {
+    public Query<I, E> like(String property, String value, MatchType matchType) {
+        if (isBlankString(value)) {
+            LOGGER.info(" value is empty,be ignored");
             return this;
         }
         StringBuilder temp = toMatchValue(value, matchType);
@@ -87,32 +79,30 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
     }
 
     /* (non-Javadoc)
-     * @see com.aixuexi.common.dao.ObjectQuery#andIsNull(java.lang.String)
+     * @see com.aixuexi.common.dao.ObjectQuery#isNull(java.lang.String)
      */
     @Override
-    public Query<I, E> andIsNull(String property) {
+    public Query<I, E> isNull(String property) {
         conditions.add(Conditions.isNull(FilterType.AND, property));
         return this;
     }
 
     /* (non-Javadoc)
-     * @see com.aixuexi.common.dao.ObjectQuery#andNotNull(java.lang.String)
+     * @see com.aixuexi.common.dao.ObjectQuery#notNull(java.lang.String)
      */
     @Override
-    public Query<I, E> andNotNull(String property) {
+    public Query<I, E> notNull(String property) {
         conditions.add(Conditions.isNotNull(FilterType.AND, property));
         return this;
     }
 
     /* (non-Javadoc)
-     * @see com.aixuexi.common.dao.ObjectQuery#andGe(java.lang.String, java.lang.Object)
+     * @see com.aixuexi.common.dao.ObjectQuery#ge(java.lang.String, java.lang.Object)
      */
     @Override
-    public Query<I, E> andGe(String property, Comparable<?> value) {
-        if (value == null) {
-            return this;
-        }
-        if (isEmptyString(value)) {
+    public Query<I, E> ge(String property, Comparable<?> value) {
+        if (isBlankString(value)) {
+            LOGGER.info(" value is empty,be ignored");
             return this;
         }
         conditions.add(Conditions.ge(AND, property, value));
@@ -120,14 +110,12 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
     }
 
     /* (non-Javadoc)
-     * @see com.aixuexi.common.dao.ObjectQuery#andGt(java.lang.String, java.lang.Object)
+     * @see com.aixuexi.common.dao.ObjectQuery#gt(java.lang.String, java.lang.Object)
      */
     @Override
-    public Query<I, E> andGt(String property, Comparable<?> value) {
-        if (value == null) {
-            return this;
-        }
-        if (isEmptyString(value)) {
+    public Query<I, E> gt(String property, Comparable<?> value) {
+        if (isBlankString(value)) {
+            LOGGER.info(" value is empty,be ignored");
             return this;
         }
         conditions.add(Conditions.gt(AND, property, value));
@@ -135,14 +123,12 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
     }
 
     /* (non-Javadoc)
-     * @see com.aixuexi.common.dao.ObjectQuery#andLt(java.lang.String, java.lang.Object)
+     * @see com.aixuexi.common.dao.ObjectQuery#lt(java.lang.String, java.lang.Object)
      */
     @Override
-    public Query<I, E> andLt(String property, Comparable<?> value) {
-        if (value == null) {
-            return this;
-        }
-        if (isEmptyString(value)) {
+    public Query<I, E> lt(String property, Comparable<?> value) {
+        if (isBlankString(value)) {
+            LOGGER.info(" value is empty,be ignored");
             return this;
         }
         conditions.add(Conditions.lt(AND, property, value));
@@ -150,14 +136,12 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
     }
 
     /* (non-Javadoc)
-     * @see com.aixuexi.common.dao.ObjectQuery#andLe(java.lang.String, java.lang.Object)
+     * @see com.aixuexi.common.dao.ObjectQuery#le(java.lang.String, java.lang.Object)
      */
     @Override
-    public Query<I, E> andLe(String property, Comparable<?> value) {
-        if (value == null) {
-            return this;
-        }
-        if (isEmptyString(value)) {
+    public Query<I, E> le(String property, Comparable<?> value) {
+        if (isBlankString(value)) {
+            LOGGER.info(" value is empty,be ignored");
             return this;
         }
         conditions.add(Conditions.le(AND, property, value));
@@ -169,10 +153,8 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
      */
     @Override
     public Query<I, E> orGe(String property, Comparable<?> value) {
-        if (value == null) {
-            return this;
-        }
-        if (isEmptyString(value)) {
+        if (isBlankString(value)) {
+            LOGGER.info(" value is empty,be ignored");
             return this;
         }
         conditions.add(Conditions.ge(OR, property, value));
@@ -184,10 +166,8 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
      */
     @Override
     public Query<I, E> orGt(String property, Comparable<?> value) {
-        if (value == null) {
-            return this;
-        }
-        if (isEmptyString(value)) {
+        if (isBlankString(value)) {
+            LOGGER.info(" value is empty,be ignored");
             return this;
         }
         conditions.add(Conditions.gt(OR, property, value));
@@ -199,10 +179,8 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
      */
     @Override
     public Query<I, E> orLt(String property, Comparable<?> value) {
-        if (value == null) {
-            return this;
-        }
-        if (isEmptyString(value)) {
+        if (isBlankString(value)) {
+            LOGGER.info(" value is empty,be ignored");
             return this;
         }
         conditions.add(Conditions.lt(OR, property, value));
@@ -214,10 +192,8 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
      */
     @Override
     public Query<I, E> orLe(String property, Comparable<?> value) {
-        if (value == null) {
-            return this;
-        }
-        if (isEmptyString(value)) {
+        if (isBlankString(value)) {
+            LOGGER.info(" value is empty,be ignored");
             return this;
         }
         conditions.add(Conditions.le(OR, property, value));
@@ -247,10 +223,8 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
      */
     @Override
     public Query<I, E> orLike(String property, String value) {
-        if (value == null) {
-            return this;
-        }
-        if (value.trim().length() == 0) {
+        if (isBlankString(value)) {
+            LOGGER.info(" value is empty,be ignored");
             return this;
         }
         conditions.add(Conditions.like(OR, property, "%" + value + "%"));
@@ -262,10 +236,8 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
      */
     @Override
     public Query<I, E> orLike(String property, String value, MatchType matchType) {
-        if (value == null) {
-            return this;
-        }
-        if (value.trim().length() == 0) {
+        if (isBlankString(value)) {
+            LOGGER.info(" value is empty,be ignored");
             return this;
         }
         StringBuilder temp = toMatchValue(value, matchType);
@@ -303,11 +275,12 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
     }
 
     /* (non-Javadoc)
-     * @see com.aixuexi.common.dao.ObjectQuery#andIn(java.lang.String, java.lang.Object[])
+     * @see com.aixuexi.common.dao.ObjectQuery#in(java.lang.String, java.lang.Object[])
      */
     @Override
-    public Query<I, E> andIn(String property, Object[] value) {
+    public Query<I, E> in(String property, Object[] value) {
         if (value == null) {
+            LOGGER.info(" value is null,be ignored");
             return this;
         }
         conditions.add(new InCondition(FilterType.AND, property, value));
@@ -315,11 +288,12 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
     }
 
     /* (non-Javadoc)
-     * @see com.aixuexi.common.dao.ObjectQuery#andIn(java.lang.String, java.lang.Object[])
+     * @see com.aixuexi.common.dao.ObjectQuery#in(java.lang.String, java.lang.Object[])
      */
     @Override
-    public Query<I, E> andIn(String property, List<?> value) {
+    public Query<I, E> in(String property, List<?> value) {
         if (value == null) {
+            LOGGER.info(" value is null,be ignored");
             return this;
         }
         conditions.add(new InCondition(FilterType.AND, property, value.toArray()));
@@ -327,20 +301,25 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
     }
 
     /* (non-Javadoc)
-     * @see com.aixuexi.common.dao.ObjectQuery#andIn(java.lang.String, java.lang.Object[])
+     * @see com.aixuexi.common.dao.ObjectQuery#in(java.lang.String, java.lang.Object[])
      */
     @Override
     public Query<I, E> orIn(String property, Object[] value) {
         conditions.add(new InCondition(FilterType.OR, property, value));
         return this;
     }
-
+    /* (non-Javadoc)
+     * @see com.aixuexi.common.dao.ObjectQuery#in(java.lang.String, java.lang.Object[])
+     */
     @Override
-    public Query<I, E> andNe(String property, Object value) {
-        if (value == null) {
-            return this;
-        }
-        if (isEmptyString(value)) {
+    public Query<I, E> orIn(String property, List<?> value) {
+        conditions.add(new InCondition(FilterType.OR, property, value.toArray()));
+        return this;
+    }
+    @Override
+    public Query<I, E> ne(String property, Object value) {
+        if (isBlankString(value)) {
+            LOGGER.info(" value is empty,be ignored");
             return this;
         }
         conditions.add(Conditions.ne(FilterType.AND, property, value));
@@ -348,7 +327,7 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
     }
 
     @Override
-    public Query<I, E> andNormal() {
+    public Query<I, E> normal() {
         conditions.add(Conditions.ne(FilterType.AND, Constants.LOGISTIC_DELETABLE_PROPERTY_NAME, true));
         return this;
     }
@@ -366,7 +345,7 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
      * @see com.aixuexi.common.dao.ObjectQuery#getOrders()
      */
     @Override
-    public List<Condition> getOrders() {
+    public List<PropertyCondition> getOrders() {
         return orders;
     }
 
@@ -388,5 +367,36 @@ public abstract class AbstractQuery<I, E extends Serializable> implements Query<
 
     private boolean isEmptyString(Object value) {
         return value instanceof String && ((String) value).trim().length() == 0;
+    }
+
+    private boolean isBlankString(Object value) {
+        if (value == null) {
+            return true;
+        }
+        return isEmptyString(value);
+    }
+
+    @Override
+    public Query<I, E> between(String property, Comparable start, Comparable end) {
+        if (start == null) {
+            return this;
+        }
+        if (end == null) {
+            return this;
+        }
+        conditions.add(Conditions.between(AND, property, start, end));
+        return this;
+    }
+
+    @Override
+    public Query<I, E> orBetween(String property, Comparable start, Comparable end) {
+        if (start == null) {
+            return this;
+        }
+        if (end == null) {
+            return this;
+        }
+        conditions.add(Conditions.between(OR, property, start, end));
+        return this;
     }
 }

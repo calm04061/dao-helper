@@ -5,7 +5,7 @@ package com.calm.dao.helper.condition;
  * @author dingqihui
  *
  */
-public class DescCondition extends Condition {
+public class DescCondition extends AbstractPropertyCondition {
 
 	public DescCondition(String item) {
 		super(item);

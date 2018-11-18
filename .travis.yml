@@ -7,15 +7,12 @@ cache:
 branches:
   only:
   - develop
-  - feature/*
-  - tags
 jdk:
   - oraclejdk8
 script:
-  - mvn -version
+- mvn clean source:jar deploy -Dmaven.test.skip -Dgithub-token=${api_token} -Pgithub
 deploy:
   script: mvn clean source:jar deploy -Dmaven.test.skip -Dgithub-token=${api_token} -Pgithub
   provider: script
   on:
     tags: true
-    branch: develop

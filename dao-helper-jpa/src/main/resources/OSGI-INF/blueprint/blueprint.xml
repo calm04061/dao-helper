@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+    <bean class="com.calm.dao.helper.jpa.factory.EqOperation2Predicate" id="eqOperation2Predicate"/>
+    <bean class="com.calm.dao.helper.jpa.factory.GeOperation2Predicate" id="geOperation2Predicate"/>
+    <bean class="com.calm.dao.helper.jpa.factory.GtOperation2Predicate" id="gtOperation2Predicate"/>
+    <bean class="com.calm.dao.helper.jpa.factory.LeOperation2Predicate" id="leOperation2Predicate"/>
+    <bean class="com.calm.dao.helper.jpa.factory.LtOperation2Predicate" id="ltOperation2Predicate"/>
+    <bean class="com.calm.dao.helper.jpa.factory.LikeOperation2Predicate" id="likeOperation2Predicate"/>
+    <bean class="com.calm.dao.helper.jpa.factory.NeOperation2Predicate" id="neOperation2Predicate"/>
+
+    <service ref="eqOperation2Predicate" interface="com.calm.dao.helper.jpa.Operation2Predicate">
+        <service-properties>
+            <entry key="name" value="EQ"/>
+        </service-properties>
+    </service>
+    <service ref="geOperation2Predicate" interface="com.calm.dao.helper.jpa.Operation2Predicate">
+        <service-properties>
+            <entry key="name" value="GE"/>
+        </service-properties>
+    </service>
+    <service ref="gtOperation2Predicate" interface="com.calm.dao.helper.jpa.Operation2Predicate">
+        <service-properties>
+            <entry key="name" value="GT"/>
+        </service-properties>
+    </service>
+    <service ref="leOperation2Predicate" interface="com.calm.dao.helper.jpa.Operation2Predicate">
+        <service-properties>
+            <entry key="name" value="LE"/>
+        </service-properties>
+    </service>
+    <service ref="ltOperation2Predicate" interface="com.calm.dao.helper.jpa.Operation2Predicate">
+        <service-properties>
+            <entry key="name" value="LT"/>
+        </service-properties>
+    </service>
+    <service ref="likeOperation2Predicate" interface="com.calm.dao.helper.jpa.Operation2Predicate">
+        <service-properties>
+            <entry key="name" value="LIKE"/>
+        </service-properties>
+    </service>
+    <service ref="neOperation2Predicate" interface="com.calm.dao.helper.jpa.Operation2Predicate">
+        <service-properties>
+            <entry key="name" value="NE"/>
+        </service-properties>
+    </service>
+</blueprint>

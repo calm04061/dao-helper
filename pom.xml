@@ -22,7 +22,7 @@
     <repositories>
         <repository>
             <id>github</id>
-            <url>https://raw.githubusercontent.com/calm04061/maven/master/</url>
+            <url>http://calm04061.github.io/maven/</url>
             <name>github</name>
             <snapshots>
                 <enabled>true</enabled>

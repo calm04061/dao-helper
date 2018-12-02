@@ -5,6 +5,8 @@ import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 
+import javax.lang.model.element.Name;
+
 @AutoService({MethodProcessor.class})
 public class OrMethodProcessor implements MethodProcessor {
     @Override
@@ -13,7 +15,7 @@ public class OrMethodProcessor implements MethodProcessor {
     }
 
     @Override
-    public MethodSpec.Builder buildMethod(ClassName superClassName, ClassName queryClassName) {
+    public MethodSpec.Builder buildMethod(Name entityName, ClassName superClassName, ClassName queryClassName) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("or");
 //        return new UserQuery(this, getEntityType(), getOperation2PredicateFinder());
         builder.addStatement("$T $N = new $T($N,$N,$N)", queryClassName, "query", queryClassName, "this", "getEntityType()", "getOperation2PredicateFinder()");

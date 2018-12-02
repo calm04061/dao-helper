@@ -44,6 +44,7 @@ public class EntityProcessor extends AbstractProcessor {
             for (Element element : elementsAnnotatedWith) {
                 String elementPackage = mElementUtils.getPackageOf(element).getQualifiedName().toString();
                 TypeElement typeElement = (TypeElement) element;
+                Name entityName = typeElement.getQualifiedName();
                 String queryClassName = typeElement.getSimpleName().toString() + "Query";
                 TypeSpec.Builder queryBuilder = TypeSpec.classBuilder(queryClassName);
                 queryBuilder.addModifiers(Modifier.PUBLIC);
@@ -56,7 +57,7 @@ public class EntityProcessor extends AbstractProcessor {
                 queryBuilder.superclass(parameterizedTypeName);
                 ClassName dao = ClassName.get(packageName, queryClassName);
 
-                methodProcessor(queryBuilder, superClassName, dao);
+                methodProcessor(queryBuilder, superClassName, dao, entityName);
                 fieldProcess(typeElement, queryBuilder, dao);
                 JavaFile.Builder builder = JavaFile.builder(packageName, queryBuilder.build());
                 builder.build().writeTo(mFiler);
@@ -98,11 +99,11 @@ public class EntityProcessor extends AbstractProcessor {
         });
     }
 
-    private void methodProcessor(TypeSpec.Builder typeBuilder, ClassName superClassName, ClassName queryClassName) {
+    private void methodProcessor(TypeSpec.Builder typeBuilder, ClassName superClassName, ClassName queryClassName, Name entityName) {
         ServiceLoader<MethodProcessor> load = ServiceLoader.load(MethodProcessor.class, MethodProcessor.class.getClassLoader());
         for (MethodProcessor next : load) {
             if (next.isSupport(superClassName)) {
-                MethodSpec.Builder builder = next.buildMethod(superClassName, queryClassName);
+                MethodSpec.Builder builder = next.buildMethod(entityName, superClassName, queryClassName);
                 builder.addModifiers(Modifier.PUBLIC);
                 typeBuilder.addMethod(builder.build());
             }

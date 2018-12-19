@@ -7,7 +7,7 @@
     <groupId>com.calm</groupId>
     <artifactId>dao-helper-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.4</version>
+    <version>0.0.5-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>

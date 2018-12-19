@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -163,6 +164,7 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
      * @param <Y>      泛型对象类型
      * @return path对象
      */
+    @SuppressWarnings("unchecked")
     public <Y> Path<Y> getPath(Path<?> path, String property, Map<String, PathMap> pathMap) {
         String[] split = property.split("\\.");
         Iterator<String> iterator = Arrays.asList(split).iterator();
@@ -197,6 +199,7 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
      * @return 查询条件
      */
 
+    @SuppressWarnings("rawtypes")
     protected Predicate[] getPredicate(Query<?, ?> item, Root<E> from, Map<String, PathMap> pathMap, CriteriaQuery<?> countQuery, CriteriaBuilder criteriaBuilder) {
         List<FilterCondition> conditions2 = item.getConditions();
         Predicate predicateResult;
@@ -280,13 +283,14 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
      * @param pathMap  path cache
      * @return 查询条件
      */
-//	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked","rawtypes"})
     private Predicate operation2Predicate(String property, OperationItem<?> item2, Root<E> from, Map<String, PathMap> pathMap, CriteriaBuilder criteriaBuilder) {
 
         Operation operation = item2.getOperation();
         Object value = item2.getValue();
 
         String[] split = property.split("\\.");
+
         Operation2Predicate operation2Predicate = operation2PredicateFinder.find(operation);
         if (split.length > 1) {
 

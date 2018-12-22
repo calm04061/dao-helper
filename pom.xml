@@ -7,7 +7,7 @@
     <groupId>com.calm</groupId>
     <artifactId>dao-helper-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
     <properties>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -93,7 +93,7 @@
             <plugin>
                 <groupId>com.amashchenko.maven.plugin</groupId>
                 <artifactId>gitflow-maven-plugin</artifactId>
-                <version>1.9.0</version>
+                <version>1.10.0</version>
                 <configuration>
                     <skipTestProject>true</skipTestProject>
                     <gitFlowConfig>

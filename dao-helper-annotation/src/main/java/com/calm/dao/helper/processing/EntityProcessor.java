@@ -8,6 +8,7 @@ import com.google.auto.service.AutoService;
 import com.squareup.javapoet.*;
 
 import javax.annotation.processing.*;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
@@ -18,16 +19,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @AutoService({Processor.class})
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class EntityProcessor extends AbstractProcessor {
-    private Filer mFiler;
-    private Elements mElementUtils;
+    private Filer filter;
+    private Elements elementUtils;
     private Messager messager;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
-        mFiler = processingEnvironment.getFiler();
-        mElementUtils = processingEnvironment.getElementUtils();
+        filter = processingEnvironment.getFiler();
+        elementUtils = processingEnvironment.getElementUtils();
         messager = processingEnvironment.getMessager();
     }
 
@@ -42,7 +44,7 @@ public class EntityProcessor extends AbstractProcessor {
         try {
             Set<? extends Element> elementsAnnotatedWith = roundEnv.getElementsAnnotatedWith(Helper.class);
             for (Element element : elementsAnnotatedWith) {
-                String elementPackage = mElementUtils.getPackageOf(element).getQualifiedName().toString();
+                String elementPackage = elementUtils.getPackageOf(element).getQualifiedName().toString();
                 TypeElement typeElement = (TypeElement) element;
                 Name entityName = typeElement.getQualifiedName();
                 String queryClassName = typeElement.getSimpleName().toString() + "Query";
@@ -60,7 +62,7 @@ public class EntityProcessor extends AbstractProcessor {
                 methodProcessor(queryBuilder, superClassName, dao, entityName);
                 fieldProcess(typeElement, queryBuilder, dao);
                 JavaFile.Builder builder = JavaFile.builder(packageName, queryBuilder.build());
-                builder.build().writeTo(mFiler);
+                builder.build().writeTo(filter);
             }
 
         } catch (IOException e) {
@@ -118,9 +120,10 @@ public class EntityProcessor extends AbstractProcessor {
             if (type.equals("com.calm.dao.helper.entity.BaseEntity") || type.equals("com.calm.dao.helper.entity.AbstractTreeEntity")) {
                 DeclaredType argsType = (DeclaredType) typeMirror;
                 List<? extends TypeMirror> typeArguments = argsType.getTypeArguments();
-                for (TypeMirror idType : typeArguments) {
-                    return idType.toString();
+                if (typeArguments == null || typeArguments.isEmpty()) {
+                    return null;
                 }
+                return typeArguments.get(0).toString();
             }
         }
         return null;

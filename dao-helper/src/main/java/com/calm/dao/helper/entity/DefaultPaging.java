@@ -11,7 +11,7 @@ public class DefaultPaging<T extends Serializable> implements Paging<T> {
      *
      */
     private static final long serialVersionUID = 1L;
-    private List<T> data;
+    private List<? extends T> data;
     private int currentPage = 1;
     private int totalPage;
     private int pageSize = 20;
@@ -23,11 +23,11 @@ public class DefaultPaging<T extends Serializable> implements Paging<T> {
         this.pageSize = pageSize;
     }
 
-    public List<T> getData() {
+    public List<? extends T> getData() {
         return data;
     }
 
-    public void setData(List<T> data) {
+    public void setData(List<? extends T> data) {
         this.data = data;
     }
 

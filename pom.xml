@@ -7,11 +7,12 @@
     <groupId>com.calm</groupId>
     <artifactId>dao-helper-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.6</version>
+    <version>0.0.7</version>
     <properties>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <spring.version>4.3.13.RELEASE</spring.version>
     </properties>
     <modules>
         <module>dao-helper-annotation</module>
@@ -32,12 +33,12 @@
 
     <distributionManagement>
         <repository>
-            <id>nexus</id>
-            <url>http://nexus.calm.com/repository/maven-releases/</url>
+            <id>rdc-releases</id>
+            <url>https://repo.rdc.aliyun.com/repository/73290-release-NxB5WQ/</url>
         </repository>
         <snapshotRepository>
-            <id>nexus</id>
-            <url>http://nexus.calm.com/repository/maven-snapshots/</url>
+            <id>rdc-snapshots</id>
+            <url>https://repo.rdc.aliyun.com/repository/73290-snapshot-c2V5W5/</url>
         </snapshotRepository>
     </distributionManagement>
     <profiles>

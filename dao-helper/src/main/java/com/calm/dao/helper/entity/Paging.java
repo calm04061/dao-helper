@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 
 public interface Paging<T extends Serializable> extends Serializable{
-	List<T> getData();
+	List<? extends T> getData();
 
-	void setData(List<T> data);
+	void setData(List<? extends T> data);
 
 	int getCurrentPage();
 

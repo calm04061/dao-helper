@@ -58,6 +58,7 @@
                 </executions>
                 <configuration>
                     <instructions>
+                        <Bundle-UpdateLocation>mvn:${project.groupId}/${project.artifactId}/${project.version}</Bundle-UpdateLocation>
                         <Import-Package>
                             *
                         </Import-Package>

@@ -60,7 +60,7 @@ public abstract class AbstractQuery<I extends Serializable, E extends BaseEntity
             LOGGER.info(" value is empty,be ignored");
             return this;
         }
-        conditions.add(Conditions.like(AND, property, "%" + value + "%"));
+        conditions.add(Conditions.like(AND, property, value));
         return this;
     }
 
@@ -227,7 +227,7 @@ public abstract class AbstractQuery<I extends Serializable, E extends BaseEntity
             LOGGER.info(" value is empty,be ignored");
             return this;
         }
-        conditions.add(Conditions.like(OR, property, "%" + value + "%"));
+        conditions.add(Conditions.like(OR, property, value));
         return this;
     }
 
@@ -308,6 +308,7 @@ public abstract class AbstractQuery<I extends Serializable, E extends BaseEntity
         conditions.add(new InCondition(FilterType.OR, property, value));
         return this;
     }
+
     /* (non-Javadoc)
      * @see com.aixuexi.common.dao.ObjectQuery#in(java.lang.String, java.lang.Object[])
      */
@@ -316,6 +317,7 @@ public abstract class AbstractQuery<I extends Serializable, E extends BaseEntity
         conditions.add(new InCondition(FilterType.OR, property, value.toArray()));
         return this;
     }
+
     @Override
     public Query<I, E> ne(String property, Object value) {
         if (isBlankString(value)) {

@@ -15,7 +15,7 @@ public class DefaultPaging<T extends Serializable> implements Paging<T> {
     private int currentPage = 1;
     private int totalPage;
     private int pageSize = 20;
-    private int totalCount;
+    private long totalCount;
 
     public DefaultPaging(int currentPage, int pageSize) {
         super();
@@ -63,16 +63,20 @@ public class DefaultPaging<T extends Serializable> implements Paging<T> {
         this.pageSize = pageSize;
     }
 
-    public int getTotalCount() {
+    public long getTotalCount() {
         return totalCount;
     }
 
     public void setTotalCount(int totalCount) {
-        this.totalCount = totalCount;
-        setTotalPage((totalCount + pageSize - 1) / pageSize);
+        setTotalCount((long) totalCount);
     }
 
-    public int getTotal() {
+    public void setTotalCount(long totalCount) {
+        this.totalCount = totalCount;
+        setTotalPage((int) ((totalCount + pageSize - 1) / pageSize));
+    }
+
+    public long getTotal() {
         return totalCount;
     }
 

@@ -20,10 +20,12 @@ public interface Paging<T extends Serializable> extends Serializable{
 
 	void setPageSize(int pageSize);
 
-	int getTotalCount();
+	long getTotalCount();
 
 	void setTotalCount(int totalCount);
-	
+
+	void setTotalCount(long totalCount);
+
 	boolean isFirstPage();
 	
 	boolean isLastPage();

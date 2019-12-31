@@ -10,6 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
     <artifactId>dao-helper-jpa</artifactId>
+    <name>Dao Helper JPA</name>
+
     <dependencies>
         <dependency>
             <groupId>com.calm</groupId>

@@ -37,6 +37,11 @@
             <name>GitHub OWNER Apache Maven Packages</name>
             <url>https://maven.pkg.github.com/calm04061/maven/</url>
         </repository>
+        <snapshotRepository>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/calm04061/maven/</url>
+        </snapshotRepository>
     </distributionManagement>
     <build>
         <plugins>

@@ -10,11 +10,11 @@ script:
 deploy:
 # deploy develop to the staging environment
   - provider: script
-    script: mvn clean source:jar deploy -Dmaven.test.skip -Dgithub-token=${api_token} -Pgithub
+    script: mvn -s .m2/settings.xml clean source:jar deploy -Dmaven.test.skip -Dgithub-token=${api_token} -Pgithub
     on:
       tags: true
     # deploy master to production
   - provider: script
-    script: mvn clean source:jar deploy -Dmaven.test.skip -Dgithub-token=${api_token} -Pgithub
+    script: mvn -s .m2/settings.xml clean source:jar deploy -Dmaven.test.skip -Dgithub-token=${api_token} -Pgithub
     on:
       branch: develop

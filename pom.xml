@@ -37,12 +37,55 @@
             <name>GitHub OWNER Apache Maven Packages</name>
             <url>https://maven.pkg.github.com/calm04061/maven/</url>
         </repository>
-        <snapshotRepository>
-            <id>github</id>
-            <name>GitHub OWNER Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/calm04061/maven/</url>
-        </snapshotRepository>
     </distributionManagement>
+    <profiles>
+        <profile>
+            <id>github</id>
+            <distributionManagement>
+                <repository>
+                    <id>github</id>
+                    <name>GitHub OWNER Apache Maven Packages</name>
+                    <url>https://maven.pkg.github.com/calm04061/maven/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>nexus</id>
+                    <url>file:///${project.build.directory}/repo</url>
+                </snapshotRepository>
+            </distributionManagement>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.github</groupId>
+                        <artifactId>site-maven-plugin</artifactId>
+                        <version>0.12</version>
+                        <configuration>
+                            <message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
+                            <noJekyll>false</noJekyll>                                  <!-- disable webpage processing -->
+                            <outputDirectory>${project.build.directory}/repo</outputDirectory> <!-- matches distribution management repository url above -->
+                            <branch>refs/heads/master</branch>                       <!-- remote branch name -->
+                            <includes>
+                                <include>**/*</include>
+                            </includes>
+                            <repositoryName>maven</repositoryName>      <!-- github repo name -->
+                            <repositoryOwner>calm04061</repositoryOwner>    <!-- github username  -->
+                            <userName>calm0406@163.com</userName>
+                            <oauth2Token>${github-token}</oauth2Token>
+                            <merge>true</merge>
+                        </configuration>
+                        <executions>
+                            <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
+                            <execution>
+                                <goals>
+                                    <goal>site</goal>
+                                </goals>
+                                <phase>deploy</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <build>
         <plugins>
 
@@ -66,6 +109,46 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <version>1.4.2</version>
+                <executions>
+                    <execution>
+                        <id>maven-metadata</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>http://calm04061.github.io/maven/com/calm/${project.artifactId}/${project.version}/maven-metadata.xml</url>
+                            <outputDirectory>${project.build.directory}/repo/com/calm/${project.artifactId}/${project.version}</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>maven-metadata-md5</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>http://calm04061.github.io/maven/com/calm/${project.artifactId}/${project.version}/maven-metadata.xml.md5</url>
+                            <outputDirectory>${project.build.directory}/repo/com/calm/${project.artifactId}/${project.version}</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>maven-metadata-sha1</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>http://calm04061.github.io/maven/com/calm/${project.artifactId}/${project.version}/maven-metadata.xml.sha1</url>
+                            <outputDirectory>${project.build.directory}/repo/com/calm/${project.artifactId}/${project.version}</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

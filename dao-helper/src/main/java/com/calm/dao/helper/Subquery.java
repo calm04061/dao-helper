@@ -51,7 +51,7 @@ public interface Subquery<I extends Serializable, E extends BaseEntity<I>> {
      * @param end      结束值
      * @return 查询器
      */
-    Query<I, E> between(String property, Comparable start, Comparable end);
+    Query<I, E> between(String property, Comparable<?> start, Comparable<?> end);
 
     /**
      * 存在
@@ -131,7 +131,7 @@ public interface Subquery<I extends Serializable, E extends BaseEntity<I>> {
      * @param end      结束值
      * @return 查询器
      */
-    Query<I, E> orBetween(String property, Comparable start, Comparable end);
+    Query<I, E> orBetween(String property, Comparable<?> start, Comparable<?> end);
 
 
     /**

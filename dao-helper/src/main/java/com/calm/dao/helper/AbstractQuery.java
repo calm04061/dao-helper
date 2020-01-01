@@ -1,7 +1,6 @@
 package com.calm.dao.helper;
 
 import com.calm.dao.helper.condition.*;
-import com.calm.dao.helper.condition.filter.AbstractFilterCondition;
 import com.calm.dao.helper.condition.filter.FilterType;
 import com.calm.dao.helper.condition.filter.InCondition;
 import com.calm.dao.helper.condition.filter.MatchType;
@@ -379,7 +378,7 @@ public abstract class AbstractQuery<I extends Serializable, E extends BaseEntity
     }
 
     @Override
-    public Query<I, E> between(String property, Comparable start, Comparable end) {
+    public Query<I, E> between(String property, Comparable<?> start, Comparable<?> end) {
         if (start == null) {
             return this;
         }
@@ -391,7 +390,7 @@ public abstract class AbstractQuery<I extends Serializable, E extends BaseEntity
     }
 
     @Override
-    public Query<I, E> orBetween(String property, Comparable start, Comparable end) {
+    public Query<I, E> orBetween(String property, Comparable<?> start, Comparable<?> end) {
         if (start == null) {
             return this;
         }

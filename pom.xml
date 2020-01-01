@@ -43,9 +43,8 @@
             <id>github</id>
             <distributionManagement>
                 <repository>
-                    <id>github</id>
-                    <name>GitHub OWNER Apache Maven Packages</name>
-                    <url>https://maven.pkg.github.com/calm04061/maven/</url>
+                    <id>nexus</id>
+                    <url>file:///${project.build.directory}/repo</url>
                 </repository>
                 <snapshotRepository>
                     <id>nexus</id>

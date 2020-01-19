@@ -14,7 +14,7 @@
     </bean>
 
     <!-- 配置支持基于注解的事务 -->
-    <tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager"/>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <bean class="com.calm.dao.helper.jpa.factory.DefaultOperation2PredicateFinder"/>
 </beans>

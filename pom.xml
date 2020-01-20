@@ -54,6 +54,46 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>com.googlecode.maven-download-plugin</groupId>
+                        <artifactId>download-maven-plugin</artifactId>
+                        <version>1.4.2</version>
+                        <executions>
+                            <execution>
+                                <id>maven-metadata</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>wget</goal>
+                                </goals>
+                                <configuration>
+                                    <url>https://calm04061.github.io/maven/com/calm/${project.artifactId}/${project.version}/maven-metadata.xml</url>
+                                    <outputDirectory>${project.build.directory}/repo/com/calm/${project.artifactId}/${project.version}</outputDirectory>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>maven-metadata-md5</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>wget</goal>
+                                </goals>
+                                <configuration>
+                                    <url>https://calm04061.github.io/maven/com/calm/${project.artifactId}/${project.version}/maven-metadata.xml.md5</url>
+                                    <outputDirectory>${project.build.directory}/repo/com/calm/${project.artifactId}/${project.version}</outputDirectory>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>maven-metadata-sha1</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>wget</goal>
+                                </goals>
+                                <configuration>
+                                    <url>https://calm04061.github.io/maven/com/calm/${project.artifactId}/${project.version}/maven-metadata.xml.sha1</url>
+                                    <outputDirectory>${project.build.directory}/repo/com/calm/${project.artifactId}/${project.version}</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>com.github.github</groupId>
                         <artifactId>site-maven-plugin</artifactId>
                         <version>0.12</version>
@@ -111,46 +151,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>com.googlecode.maven-download-plugin</groupId>
-                <artifactId>download-maven-plugin</artifactId>
-                <version>1.4.2</version>
-                <executions>
-                    <execution>
-                        <id>maven-metadata</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>wget</goal>
-                        </goals>
-                        <configuration>
-                            <url>http://calm04061.github.io/maven/com/calm/${project.artifactId}/${project.version}/maven-metadata.xml</url>
-                            <outputDirectory>${project.build.directory}/repo/com/calm/${project.artifactId}/${project.version}</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>maven-metadata-md5</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>wget</goal>
-                        </goals>
-                        <configuration>
-                            <url>http://calm04061.github.io/maven/com/calm/${project.artifactId}/${project.version}/maven-metadata.xml.md5</url>
-                            <outputDirectory>${project.build.directory}/repo/com/calm/${project.artifactId}/${project.version}</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>maven-metadata-sha1</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>wget</goal>
-                        </goals>
-                        <configuration>
-                            <url>http://calm04061.github.io/maven/com/calm/${project.artifactId}/${project.version}/maven-metadata.xml.sha1</url>
-                            <outputDirectory>${project.build.directory}/repo/com/calm/${project.artifactId}/${project.version}</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+
         </plugins>
     </build>
 </project>

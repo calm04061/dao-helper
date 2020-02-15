@@ -18,4 +18,4 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Maven
-      run: mvn -s .m2/settings.xml clean deploy -Dmaven.test.skip -P github
+      run: mvn clean deploy -Dmaven.test.skip

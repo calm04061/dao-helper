@@ -7,7 +7,7 @@ import com.squareup.javapoet.MethodSpec;
 import javax.lang.model.element.VariableElement;
 
 @AutoService({FieldProcessor.class})
-public class StringEndWithFieldProcessor extends StringFieldProcessor {
+public class StringEndWithFieldProcessor extends AbstractLikeFieldProcessor {
 
     @Override
     public String option() {
@@ -15,6 +15,7 @@ public class StringEndWithFieldProcessor extends StringFieldProcessor {
     }
 
     public void buildMethodBody(MethodSpec.Builder builder, VariableElement var, String name) {
+        super.buildMethodBody(builder,var,name);
         builder.addStatement("like(\"" + var + "\",\"%\"+" + var + ")");
     }
 }

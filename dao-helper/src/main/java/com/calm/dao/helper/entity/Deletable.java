@@ -1,7 +1,7 @@
 package com.calm.dao.helper.entity;
 
 public interface Deletable {
-    boolean isDeleted();
+    Boolean getDeleted();
 
-    void setDeleted(boolean deleted);
+    void setDeleted(Boolean deleted);
 }

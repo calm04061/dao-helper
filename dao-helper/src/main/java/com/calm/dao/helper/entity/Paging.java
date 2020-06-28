@@ -22,8 +22,6 @@ public interface Paging<T extends Serializable> extends Serializable{
 
 	long getTotalCount();
 
-	void setTotalCount(int totalCount);
-
 	void setTotalCount(long totalCount);
 
 	boolean isFirstPage();

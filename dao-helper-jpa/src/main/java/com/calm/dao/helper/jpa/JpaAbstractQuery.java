@@ -19,8 +19,8 @@ import java.util.*;
 
 public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEntity<I>> extends AbstractQuery<I, E> {
     private EntityManager entityManager;
-    private Class<E> entityType;
-    private Operation2PredicateFinder operation2PredicateFinder;
+    private final Class<E> entityType;
+    private final Operation2PredicateFinder operation2PredicateFinder;
     private Query<I, E> parent;
 
     public JpaAbstractQuery(EntityManager entityManager, Class<E> entityType, Operation2PredicateFinder operation2PredicateFinder) {
@@ -35,21 +35,16 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
         this.parent = parent;
     }
 
-    @Override
-    public Paging<E> paging(int currentPage, int pageSize) {
+    public Long count() {
         Map<String, PathMap> pathMap = new HashMap<>();
 
         // 组织查询条件
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<E> createQuery = criteriaBuilder.createQuery(entityType);
-
-        Root<E> from = createQuery.from(entityType);
 
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-
         // 记录总数
         Root<E> root = countQuery.from(entityType);
-        Predicate[] predicate = getPredicate(this, root, pathMap, countQuery, criteriaBuilder);
+        Predicate[] predicate = getPredicate(this, root, pathMap, criteriaBuilder);
 
         CriteriaQuery<Long> where = countQuery.where(predicate);
 
@@ -57,28 +52,16 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
         where.groupBy(groups);
         where.select(criteriaBuilder.countDistinct(root));
 
-        int count = entityManager.createQuery(where).getSingleResult().intValue();
+        return entityManager.createQuery(where).getSingleResult();
+    }
 
+    @Override
+    public Paging<E> paging(int currentPage, int pageSize) {
+
+        int count = count().intValue();
         List<E> resultList;
         if (count > 0) {
-
-            predicate = getPredicate(this, from, pathMap, createQuery, criteriaBuilder);
-            createQuery.where(predicate);
-            List<Order> order = getOrder(this, from, pathMap, criteriaBuilder);
-            createQuery.orderBy(order.toArray(new Order[]{}));
-            groups = getGroups(this, from, pathMap);
-            createQuery.groupBy(groups);
-            createQuery.select(from).distinct(true);
-            TypedQuery<E> createQuery2 = entityManager.createQuery(createQuery);
-
-            int temp = currentPage - 1;
-            if (temp < 0) {
-                temp = 0;
-            }
-            int start = temp * pageSize;
-
-            createQuery2.setFirstResult(start).setMaxResults(pageSize);
-            resultList = createQuery2.getResultList();
+            resultList = pagingList(currentPage, pageSize);
         } else {
             resultList = Collections.emptyList();
         }
@@ -86,21 +69,47 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
         result.setTotalCount(count);
         result.setData(resultList);
         return result;
+    }
 
+    public List<E> pagingList(int currentPage, int pageSize) {
+        Map<String, PathMap> pathMap = new HashMap<>();
+        // 组织查询条件
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<E> entityQuery = criteriaBuilder.createQuery(entityType);
+
+        Root<E> entityRoot = entityQuery.from(entityType);
+
+        Predicate[] predicate = getPredicate(this, entityRoot, pathMap, criteriaBuilder);
+        entityQuery.where(predicate);
+        List<Order> order = getOrder(this, entityRoot, pathMap, criteriaBuilder);
+        entityQuery.orderBy(order.toArray(new Order[]{}));
+        List<Expression<?>> groups = getGroups(this, entityRoot, pathMap);
+        entityQuery.groupBy(groups);
+        entityQuery.select(entityRoot).distinct(true);
+        TypedQuery<E> createQuery2 = entityManager.createQuery(entityQuery);
+
+        int temp = currentPage - 1;
+        if (temp < 0) {
+            temp = 0;
+        }
+        int start = temp * pageSize;
+
+        createQuery2.setFirstResult(start).setMaxResults(pageSize);
+        return createQuery2.getResultList();
     }
 
     @Override
     public List<E> list() {
         Map<String, PathMap> pathMap = new HashMap<>();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<E> createQuery = criteriaBuilder.createQuery(entityType);
-        Root<E> from = createQuery.from(entityType);
-        Predicate[] predicate = getPredicate(this, from, pathMap, createQuery, criteriaBuilder);
-        createQuery.where(predicate);
-        createQuery.select(from).distinct(true);
-        List<Order> order = getOrder(this, from, pathMap, criteriaBuilder);
-        createQuery.orderBy(order.toArray(new Order[]{}));
-        return entityManager.createQuery(createQuery).getResultList();
+        CriteriaQuery<E> entityQuery = criteriaBuilder.createQuery(entityType);
+        Root<E> entityRoot = entityQuery.from(entityType);
+        Predicate[] predicate = getPredicate(this, entityRoot, pathMap, criteriaBuilder);
+        entityQuery.where(predicate);
+        entityQuery.select(entityRoot).distinct(true);
+        List<Order> order = getOrder(this, entityRoot, pathMap, criteriaBuilder);
+        entityQuery.orderBy(order.toArray(new Order[]{}));
+        return entityManager.createQuery(entityQuery).getResultList();
     }
 
     @Override
@@ -112,7 +121,7 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<E> createQuery = criteriaBuilder.createQuery(entityType);
         Root<E> from = createQuery.from(entityType);
-        Predicate[] predicate = getPredicate(this, from, pathMap, createQuery, criteriaBuilder);
+        Predicate[] predicate = getPredicate(this, from, pathMap, criteriaBuilder);
         createQuery.where(predicate);
         createQuery.select(from).distinct(true);
         try {
@@ -194,13 +203,12 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
      * @param item            query 对象
      * @param from            root
      * @param pathMap         path cache
-     * @param countQuery      分页查询
      * @param criteriaBuilder 分页查询
      * @return 查询条件
      */
 
     @SuppressWarnings("rawtypes")
-    protected Predicate[] getPredicate(Query<?, ?> item, Root<E> from, Map<String, PathMap> pathMap, CriteriaQuery<?> countQuery, CriteriaBuilder criteriaBuilder) {
+    protected Predicate[] getPredicate(Query<?, ?> item, Root<E> from, Map<String, PathMap> pathMap, CriteriaBuilder criteriaBuilder) {
         List<FilterCondition> conditions2 = item.getConditions();
         Predicate predicateResult;
         List<Predicate> predicates = new ArrayList<>();
@@ -231,7 +239,7 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
                     predicate = in;
                 } else if (con instanceof ListCondition) {
                     Query<?, ?> item2 = ((ListCondition) con).getItem();
-                    Predicate[] predicateTemp = getPredicate(item2, from, pathMap, countQuery, criteriaBuilder);
+                    Predicate[] predicateTemp = getPredicate(item2, from, pathMap, criteriaBuilder);
                     predicate = criteriaBuilder.and(predicateTemp);
                 }
                 FilterType type = con.getType();
@@ -258,7 +266,7 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
                 }
             } else if (con instanceof OrCondition) {
                 Query query = ((OrCondition) con).getQuery();
-                Predicate[] predicate1 = getPredicate(query, from, pathMap, countQuery, criteriaBuilder);
+                Predicate[] predicate1 = getPredicate(query, from, pathMap, criteriaBuilder);
 
                 if (predicate == null) {
                     predicateResult = criteriaBuilder.and(predicate1);
@@ -283,7 +291,7 @@ public abstract class JpaAbstractQuery<I extends Serializable, E extends BaseEnt
      * @param pathMap  path cache
      * @return 查询条件
      */
-	@SuppressWarnings({"unchecked","rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private Predicate operation2Predicate(String property, OperationItem<?> item2, Root<E> from, Map<String, PathMap> pathMap, CriteriaBuilder criteriaBuilder) {
 
         Operation operation = item2.getOperation();

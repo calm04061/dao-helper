@@ -17,11 +17,11 @@ import static com.calm.dao.helper.condition.filter.FilterType.OR;
 
 public abstract class AbstractQuery<I extends Serializable, E extends BaseEntity<I>> implements Query<I, E> {
     public static final Logger LOGGER = LoggerFactory.getLogger(AbstractQuery.class);
-    private List<FilterCondition> conditions = new ArrayList<>();
+    private final List<FilterCondition> conditions = new ArrayList<>();
 
-    private List<PropertyCondition> orders = new ArrayList<>();
+    private final List<PropertyCondition> orders = new ArrayList<>();
 
-    private List<String> groups = new ArrayList<>();
+    private final List<String> groups = new ArrayList<>();
 
     /* (non-Javadoc)
      * @see com.calm.framework.common.dao.ObjectQuery#eq(java.lang.String, java.lang.Object)

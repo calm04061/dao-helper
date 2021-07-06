@@ -11,6 +11,9 @@ import java.util.List;
  * @param <E> 实体类型
  */
 public interface Query<I extends Serializable, E extends BaseEntity<I>> extends Subquery<I, E> {
+    Long count();
+
+    List<E> pagingList(int currentPage, int pageSize);
 
     /**
      * 分页查询
